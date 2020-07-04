@@ -340,6 +340,7 @@ const ACurve ACurve::AsApproximation(const size_t numsteps)
             auto value = ValueAtFraction(tv);
             ret.AddPoint(fract, value);
         }
+        t_start = t_end;
     }
 
     return ret;
