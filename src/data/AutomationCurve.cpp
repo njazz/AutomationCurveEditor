@@ -2,7 +2,6 @@
 
 #include <algorithm>
 
-
 namespace AutomationCurve {
 
 void ACurve::_ClampTime(float& t)
@@ -226,7 +225,7 @@ std::vector<float> ACurve::RawPositions() { return _pointPositions; }
 const float ACurve::TimeAt(const size_t& idx) { return _pointPositions[idx]; }
 const float ACurve::ValueAt(const size_t& idx) { return _pointValues[idx]; }
 
- const LockEdit ACurve::LockAt(const size_t& idx) { return _pointLock[idx]; }
+const LockEdit ACurve::LockAt(const size_t& idx) { return _pointLock[idx]; }
 
 // main:
 float ACurve::ValueAtFraction(const float& f)
@@ -292,6 +291,59 @@ void ACurve::SetTime(const size_t& idx, const float& t)
 
     _pointPositions[idx] = value;
 }
+// ---
+const std::vector<float> ACurve::AsFloatVector(const size_t res)
+{
+    std::vector<float> ret;
+
+    for (size_t i = 0; i < res; i++) {
+        ret.push_back(ValueAtFraction(float(i) / float(res)));
+    }
+    return ret;
+} // resolution
+
+const ACurve ACurve::AsLineApproximation(const size_t res)
+{
+    ACurve ret;
+
+    for (size_t i = 0; i < res; i++) {
+        float fract = float(i) / float(res);
+        ret.AddPoint(fract, ValueAtFraction(fract));
+    }
+    return ret;
+}
+
+const std::vector<std::pair<float, float> > ACurve::AsPoints(const size_t res)
+{
+    std::vector<std::pair<float, float> > ret;
+
+    for (size_t i = 0; i < res; i++) {
+        std::pair<float, float> v;
+        float fract = float(i) / float(res);
+        v.first = fract;
+        v.second = ValueAtFraction(fract);
+        ret.push_back(v);
+    }
+    return ret;
+}
+
+const ACurve ACurve::AsApproximation(const size_t numsteps)
+{
+    ACurve ret;
+
+    float t_start = 0;
+    for (int i = 1; i < Size(); i++) {
+        float t_end = TimeAt(i);
+        for (int j = 0; j < numsteps; j++) {
+            float fract = float(j) / float(numsteps);
+            float tv = (1 - fract) * t_start + fract * t_end;
+            auto value = ValueAtFraction(tv);
+            ret.AddPoint(fract, value);
+        }
+    }
+
+    return ret;
+}
 
 // ---
 // edits
@@ -311,9 +363,10 @@ void ACurve::ClearSelection()
     _selectionIdx.clear();
 }
 
-void ACurve::SelectAll(){
+void ACurve::SelectAll()
+{
     _selectionIdx.clear();
-    for (int i=0;i<Size();i++)
+    for (int i = 0; i < Size(); i++)
         _selectionIdx.push_back(i);
 }
 
@@ -339,7 +392,8 @@ void ACurve::SetSelectionTransitions(const std::string& t)
         SetTransitionToPoint(idx, t);
 }
 
-void ACurve::SetSelectionLocks(const LockEdit& l){
+void ACurve::SetSelectionLocks(const LockEdit& l)
+{
     for (const auto& idx : _selectionIdx)
         SetPointLock(idx, l);
 }
@@ -357,21 +411,26 @@ void ACurve::DeleteSelection()
 
 // ---
 
-    void MultiCurve:: SetHidden(const std::string& name, const bool& v){
-    _isHidden   [name] = v;
-    }
-    bool MultiCurve::IsHidden(const std::string& name){
-        if (_isHidden.find(name) == _isHidden.end()) return false;
-        return _isHidden[name];
-    }
-    
-    MultiCurve::CurveColor MultiCurve::GetColor(const std::string& name){
-        if (_colorForCurve.find(name) == _colorForCurve.end())
-            return defaultColor;
-        return _colorForCurve[name];
-    }
-    void MultiCurve::SetColor(const std::string& name,const CurveColor& c ){
-        _colorForCurve[name] = c;
-    }
+void MultiCurve::SetHidden(const std::string& name, const bool& v)
+{
+    _isHidden[name] = v;
+}
+bool MultiCurve::IsHidden(const std::string& name)
+{
+    if (_isHidden.find(name) == _isHidden.end())
+        return false;
+    return _isHidden[name];
+}
+
+MultiCurve::CurveColor MultiCurve::GetColor(const std::string& name)
+{
+    if (_colorForCurve.find(name) == _colorForCurve.end())
+        return defaultColor;
+    return _colorForCurve[name];
+}
+void MultiCurve::SetColor(const std::string& name, const CurveColor& c)
+{
+    _colorForCurve[name] = c;
+}
 
 }; // namespace //

@@ -1,0 +1,5 @@
+shared_ptr in MultiCurve
+Curve conversion functions
+line approximation points per segment
+colors
+widget cleanup

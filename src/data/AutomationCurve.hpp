@@ -146,7 +146,8 @@ public:
     // data
     // TODO:
     const std::vector<float> AsFloatVector(const size_t res);   // resolution
-    const ACurve AsLineApproximation(const size_t res);
+    const ACurve AsLineApproximation(const size_t res);         // constant resolution
+    const ACurve AsApproximation(const size_t numsteps);        // num steps
     const std::vector<std::pair<float,float>> AsPoints(const size_t res);
 
     // edit
