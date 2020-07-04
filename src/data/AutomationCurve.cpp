@@ -335,10 +335,10 @@ const ACurve ACurve::AsApproximation(const size_t numsteps)
     for (int i = 1; i < Size(); i++) {
         float t_end = TimeAt(i);
         for (int j = 0; j < numsteps; j++) {
-            float fract = float(j) / float(numsteps);
+            float fract = float(j+1) / float(numsteps);
             float tv = (1 - fract) * t_start + fract * t_end;
             auto value = ValueAtFraction(tv);
-            ret.AddPoint(fract, value);
+            ret.AddPoint(tv, value);
         }
         t_start = t_end;
     }
