@@ -130,6 +130,9 @@ public:
     std::vector<float> RawValues();
     std::vector<float> RawPositions();
     
+    bool IsSelected(const size_t idx);
+    size_t SelectionSize() const { return _selectionIdx.size(); }
+
     // TODO:
     std::vector<std::pair<float,float>> RawPoints();
 
@@ -157,9 +160,66 @@ public:
 
     void SelectAll();
 
-    size_t SelectionSize() const { return _selectionIdx.size(); }
+    // relative
+    void MoveSelectionValue(const float& v);
+    void MoveSelectionTime(const float& v);
 
-    bool IsSelected(const size_t idx);
+    void SetSelectionTransitions(const std::string& t);
+    void SetSelectionLocks(const LockEdit& l);
+
+    void DeleteSelection();
+};
+
+struct Converter{
+    const ACurve& _value;
+    Converter(const ACurve& v):_value(v){};
+    
+    const float GetProgressFraction();
+    
+    const std::vector<float> AsFloatVector(const size_t res);   // resolution
+    const ACurve AsLineApproximation(const size_t res);         // constant resolution
+    const ACurve AsApproximation(const size_t numsteps);        // num steps
+    const std::vector<std::pair<float,float>> AsPoints(const size_t res);
+    
+    // threaded:
+    struct OptionalFloatVector{
+        std::vector<float> data;
+        bool ready = false;
+    };
+    
+    struct OptionalACurve{
+        ACurve data;
+        bool ready = false;
+    };
+    
+    struct OptionalPointsVector{
+        std::vector<std::pair<float,float>> data;
+        bool ready = false;
+    };
+    
+    void Cancel_T();
+    
+    const void AsFloatVector_T(OptionalFloatVector& obj, const FloatRange& timeRange, const size_t res);   // resolution
+    const void AsLineApproximation_T(OptionalACurve& obj, const FloatRange& timeRange,  const size_t res);         // constant resolution
+    const void AsApproximation_T(OptionalACurve& obj, const FloatRange& timeRange,  const size_t numsteps);        // num steps
+    const void AsPoints_T(OptionalPointsVector& obj, const FloatRange& timeRange, const size_t res);
+    
+};
+
+struct Editor{
+//    std::vector<size_t> _selectionIdx;
+    ACurve& _value;
+    Editor(ACurve& v):_value(v){};
+    
+    void SelectPoint(const size_t idx);
+    void DeselectPoint(const size_t idx);
+    void ClearSelection();
+
+    void SelectAll();
+
+//    size_t SelectionSize() const { return _selectionIdx.size(); }
+
+//    bool IsSelected(const size_t idx);
 
     // relative
     void MoveSelectionValue(const float& v);
