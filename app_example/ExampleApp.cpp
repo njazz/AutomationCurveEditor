@@ -145,6 +145,13 @@ int main(int, char**)
             }
         }
         ImGui::End();
+        
+        ImGui::Begin("List");
+        if (mc.ActiveCurve() != nullptr){
+            AutomationCurve::ImWidgetListView("Test list", mc.editor);
+
+        }
+        ImGui::End();
 
         // Rendering
         ImGui::Render();

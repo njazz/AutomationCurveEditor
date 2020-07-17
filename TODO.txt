@@ -1,5 +1,10 @@
-shared_ptr in MultiCurve
-Curve conversion functions
-line approximation points per segment
+* shared_ptr in MultiCurve
+* Curve conversion functions
+* line approximation points per segment
+list editor widgets
 colors
 widget cleanup
+overview drag/doubleclick/alt drag zoom-scroll/ctrl drag scroll
+limit draw calls
+display range lambda
+bool output

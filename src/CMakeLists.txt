@@ -30,7 +30,11 @@ add_library(CurveEditor STATIC
 ${SRC_AutomationCurve}
 ${SRC_AutomationCurveJSON}
 ${SRC_AutomationCurveWidget}
+
 ${HEADERS_AutomationCurve}
+${HEADERS_AutomationCurveJSON}
+${HEADERS_AutomationCurveWidget}
+
 )
 
 

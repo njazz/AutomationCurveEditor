@@ -26,7 +26,7 @@ private:
 public:
     static EaseFunctor Create(const std::string& name);
     static std::vector<std::string> Names();
-    // later:
+    // later: cached version
     // static EaseFunctor CreateWithLUT(const std::string& name, const size_t tableSize);
 };
 
@@ -154,7 +154,6 @@ public:
 
 /// @brief main converter static class
 struct CurveConverter {
-    // TODO: shared ptr
     ACurvePtr curve;
     CurveConverter(ACurvePtr v)
         : curve(v){};
@@ -203,7 +202,6 @@ struct CurveEditor {
 
     ACurvePtr curve;
 
-    // TODO: shared ptr
     CurveEditor(ACurvePtr v)
         : curve(v){};
 
@@ -261,7 +259,7 @@ public:
             editor = CurveEditor(curves[_activeCurve]);
     }
     std::string ActiveCurveName() { return _activeCurve; }
-    ACurvePtr ActiveCurve() { return curves[_activeCurve]; }
+    ACurvePtr ActiveCurve() { return (HasActiveCurve()) ? curves[_activeCurve] : nullptr; }
 
     inline bool HasActiveCurve() { return curves.find(_activeCurve) != curves.end(); }
 
