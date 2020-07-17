@@ -2,6 +2,8 @@
 
 #include <algorithm>
 
+#include "math.h"
+
 namespace AutomationCurve {
 
 void ACurve::_ClampTime(float& t) const

@@ -4,3 +4,6 @@
 - Test widget bool output
 - Test value range conversion
 
+- float vec widget: vertical bars
+- float vec widget: horizontal split
+

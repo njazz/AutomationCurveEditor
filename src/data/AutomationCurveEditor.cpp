@@ -1,6 +1,8 @@
 
 #include "AutomationCurve.hpp"
 
+#include <algorithm>
+
 namespace AutomationCurve{
 
 void CurveEditor::SelectPoint(const size_t idx)
