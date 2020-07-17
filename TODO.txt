@@ -1,11 +1,6 @@
-* shared_ptr in MultiCurve
-* Curve conversion functions
-* line approximation points per segment
-* list editor widgets
-? colors
-* widget cleanup / bool output
-* overview drag/doubleclick/alt drag zoom-scroll/ctrl drag scroll
-limit draw calls
-* display range lambda
-time offset/scale in overview
-* cycle LR
+- Limit draw calls
+- Add time offset/scale in overview widgets
+- Add tests
+- Test widget bool output
+- Test value range conversion
+
