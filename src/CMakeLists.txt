@@ -22,10 +22,19 @@ get_property(SRC_AutomationCurve GLOBAL PROPERTY SRC_AutomationCurve)
 get_property(SRC_AutomationCurveJSON GLOBAL PROPERTY SRC_AutomationCurveJSON)
 get_property(SRC_AutomationCurveWidget GLOBAL PROPERTY SRC_AutomationCurveWidget)
 
+get_property(HEADERS_AutomationCurve GLOBAL PROPERTY HEADERS_AutomationCurve)
+get_property(HEADERS_AutomationCurveJSON GLOBAL PROPERTY HEADERS_AutomationCurveJSON)
+get_property(HEADERS_AutomationCurveWidget GLOBAL PROPERTY HEADERS_AutomationCurveWidget)
+
 add_library(CurveEditor STATIC 
 ${SRC_AutomationCurve}
 ${SRC_AutomationCurveJSON}
 ${SRC_AutomationCurveWidget}
+
+${HEADERS_AutomationCurve}
+${HEADERS_AutomationCurveJSON}
+${HEADERS_AutomationCurveWidget}
+
 )
 
 

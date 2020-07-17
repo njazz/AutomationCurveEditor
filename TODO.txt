@@ -1,5 +1,6 @@
-shared_ptr in MultiCurve
-Curve conversion functions
-line approximation points per segment
-colors
-widget cleanup
+- Limit draw calls
+- Add time offset/scale in overview widgets
+- Add tests
+- Test widget bool output
+- Test value range conversion
+

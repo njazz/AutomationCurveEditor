@@ -4,30 +4,46 @@
 
 namespace AutomationCurve {
 
-void ACurve::_ClampTime(float& t)
+void ACurve::_ClampTime(float& t) const
 {
     if ((t >= 0.0) && (t <= 1))
         return;
 
-    // hold
-    if (_cycleType == CycleType::Hold) {
-        if (t > 1)
+    if (t > 1) {
+        // hold
+        if (_cycleRight == CycleType::Hold) {
             t = 1;
-        if (t < 0)
+        }
+
+        if (_cycleRight == CycleType::Zero) {
+            t = ACurve::TimeZero();
+        }
+
+        if (_cycleRight == CycleType::Repeat) {
+            t = fmodf(t, 1);
+        }
+
+        // todo: mirror
+    }
+
+    if (t < 0) {
+        if (_cycleLeft == CycleType::Hold) {
             t = 0;
-        return;
-    }
+        }
 
-    // zero
-    if (_cycleType == CycleType::Zero) {
-        t = 0;
-        return;
-    }
+        if (_cycleLeft == CycleType::Zero) {
+            t = ACurve::TimeZero();
+        }
 
-    // TODO: mirror, repeat
+        if (_cycleLeft == CycleType::Repeat) {
+            t = 1 - fmodf(-t, 1);
+        }
+
+        // todo: mirror
+    }
 }
 
-void ACurve::_ClampValue(float& v)
+void ACurve::_ClampValue(float& v) const
 {
     if (v > 1) {
         v = 1;
@@ -55,7 +71,11 @@ void ACurve::AddPoint(const float& fract, const float& value)
     _ClampValue(value_);
 
     auto fract_ = fract;
+
+    // todo: change
     _ClampTime(fract_);
+    if (fract_ == ACurve::TimeZero())
+        return;
 
     auto tf = EaseFunctorFactory::Create(_defaultTransitionType);
 
@@ -129,7 +149,16 @@ void ACurve::InitTF()
 
 } // -1..1
 
-size_t ACurve::Size() { return _pointPositions.size(); }
+size_t ACurve::Size() const { return _pointPositions.size(); }
+
+void ACurve::SetCycleLeft(const CycleType& v)
+{
+    _cycleLeft = v;
+}
+void ACurve::SetCycleRight(const CycleType& v)
+{
+    _cycleRight = v;
+}
 
 void ACurve::SetPointLock(const size_t& idx, const LockEdit& l)
 {
@@ -162,7 +191,7 @@ std::string ACurve::TransitionAt(const size_t& idx)
     return _typenameOfTransitionToPoint[idx];
 }
 
-const int32_t ACurve::LeftPointIndexAtFraction(const float& f)
+const int32_t ACurve::LeftPointIndexAtFraction(const float& f) const
 {
     // array bounds
     if (Size() < 2)
@@ -180,7 +209,7 @@ const int32_t ACurve::LeftPointIndexAtFraction(const float& f)
 
 } // -1 for not found;
 
-const int32_t ACurve::RightPointIndexAtFraction(const float& f)
+const int32_t ACurve::RightPointIndexAtFraction(const float& f) const
 {
     auto l = LeftPointIndexAtFraction(f);
     if (l == -1)
@@ -221,15 +250,31 @@ const FloatRange ACurve::TimeRangeForPoint(const size_t& idx)
 
 std::vector<float> ACurve::RawValues() { return _pointValues; }
 std::vector<float> ACurve::RawPositions() { return _pointPositions; }
+std::vector<std::pair<float, float> > ACurve::RawPoints()
+{
+    std::vector<std::pair<float, float> > ret;
+    for (int i = 0; i < _pointValues.size(); i++) {
+        std::pair<float, float> p;
+        p.first = _pointValues[i];
+        p.second = _pointPositions[i];
+        ret[i] = p;
+    }
+    return ret;
+}
 
-const float ACurve::TimeAt(const size_t& idx) { return _pointPositions[idx]; }
-const float ACurve::ValueAt(const size_t& idx) { return _pointValues[idx]; }
+const float ACurve::TimeAt(const size_t& idx) const { return _pointPositions.at(idx); }
+const float ACurve::ValueAt(const size_t& idx) const { return _pointValues.at(idx); }
 
-const LockEdit ACurve::LockAt(const size_t& idx) { return _pointLock[idx]; }
+const LockEdit ACurve::LockAt(const size_t& idx) const { return _pointLock.at(idx); }
 
 // main:
-float ACurve::ValueAtFraction(const float& f)
+float ACurve::ValueAtFraction(const float& f0) const
 {
+    float f = f0;
+    _ClampTime(f);
+    if (f == ACurve::TimeZero())
+        return 0;
+
     auto lp = LeftPointIndexAtFraction(f);
     auto rp = RightPointIndexAtFraction(f);
 
@@ -278,7 +323,11 @@ void ACurve::SetTime(const size_t& idx, const float& t)
     if (idx >= Size())
         return;
     auto value = t;
+    // todo: remove/change?
     _ClampTime(value);
+
+    if (value == ACurve::TimeZero())
+        return;
 
     auto idx2 = idx + 1;
     if (idx2 < Size())
@@ -291,123 +340,32 @@ void ACurve::SetTime(const size_t& idx, const float& t)
 
     _pointPositions[idx] = value;
 }
-// ---
-const std::vector<float> ACurve::AsFloatVector(const size_t res)
-{
-    std::vector<float> ret;
-
-    for (size_t i = 0; i < res; i++) {
-        ret.push_back(ValueAtFraction(float(i) / float(res)));
-    }
-    return ret;
-} // resolution
-
-const ACurve ACurve::AsLineApproximation(const size_t res)
-{
-    ACurve ret;
-
-    for (size_t i = 0; i < res; i++) {
-        float fract = float(i) / float(res);
-        ret.AddPoint(fract, ValueAtFraction(fract));
-    }
-    return ret;
-}
-
-const std::vector<std::pair<float, float> > ACurve::AsPoints(const size_t res)
-{
-    std::vector<std::pair<float, float> > ret;
-
-    for (size_t i = 0; i < res; i++) {
-        std::pair<float, float> v;
-        float fract = float(i) / float(res);
-        v.first = fract;
-        v.second = ValueAtFraction(fract);
-        ret.push_back(v);
-    }
-    return ret;
-}
-
-const ACurve ACurve::AsApproximation(const size_t numsteps)
-{
-    ACurve ret;
-
-    float t_start = 0;
-    for (int i = 1; i < Size(); i++) {
-        float t_end = TimeAt(i);
-        for (int j = 0; j < numsteps; j++) {
-            float fract = float(j+1) / float(numsteps);
-            float tv = (1 - fract) * t_start + fract * t_end;
-            auto value = ValueAtFraction(tv);
-            ret.AddPoint(tv, value);
-        }
-        t_start = t_end;
-    }
-
-    return ret;
-}
 
 // ---
-// edits
-void ACurve::SelectPoint(const size_t idx)
+
+void ACurve::SetScaledValue(const size_t& idx, const float& v)
 {
-    if (!IsSelected(idx))
-        _selectionIdx.push_back(idx);
+    SetValue(idx, _convertToNormalised(v));
 }
-void ACurve::DeselectPoint(const size_t idx)
+void ACurve::SetScaledTime(const size_t& idx, const float& t)
 {
-    if (std::find(_selectionIdx.begin(), _selectionIdx.end(), idx) == _selectionIdx.end())
-        return;
-    _selectionIdx.erase(std::remove(_selectionIdx.begin(), _selectionIdx.end(), idx));
-}
-void ACurve::ClearSelection()
-{
-    _selectionIdx.clear();
+    SetTime(idx, (_timeScale == 0) ? 0 : (t - _timeOffset) / _timeScale);
 }
 
-void ACurve::SelectAll()
+float ACurve::ScaledTimeAt(const size_t& idx)
 {
-    _selectionIdx.clear();
-    for (int i = 0; i < Size(); i++)
-        _selectionIdx.push_back(i);
+    return TimeAt(idx) * _timeScale + _timeOffset;
 }
 
-bool ACurve::IsSelected(const size_t idx)
+float ACurve::ScaledValueAt(const size_t& idx)
 {
-    return std::find(_selectionIdx.begin(), _selectionIdx.end(), idx) != _selectionIdx.end();
+    return _convertFromNormalised(TimeAt(idx));
 }
 
-void ACurve::MoveSelectionValue(const float& v)
+void ACurve::SetValueConverters(const ConverterFn& converterFrom, const ConverterFn& converterTo)
 {
-    for (const auto& idx : _selectionIdx)
-        SetValue(idx, ValueAt(idx) + v);
-}
-void ACurve::MoveSelectionTime(const float& v)
-{
-    for (const auto& idx : _selectionIdx)
-        SetTime(idx, TimeAt(idx) + v);
-}
-
-void ACurve::SetSelectionTransitions(const std::string& t)
-{
-    for (const auto& idx : _selectionIdx)
-        SetTransitionToPoint(idx, t);
-}
-
-void ACurve::SetSelectionLocks(const LockEdit& l)
-{
-    for (const auto& idx : _selectionIdx)
-        SetPointLock(idx, l);
-}
-
-void ACurve::DeleteSelection()
-{
-    // TODO: clean
-    for (int i = (Size() - 1); i >= 0; i--) {
-        if (IsSelected(i))
-            RemovePointAt(i);
-    }
-
-    ClearSelection();
+    _convertToNormalised = converterFrom;
+    _convertFromNormalised = converterTo;
 }
 
 // ---

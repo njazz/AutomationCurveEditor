@@ -73,19 +73,22 @@ int main(int, char**)
     float zoom = 1;
 
     //
-    AutomationCurve::ACurve c1;
-    c1.InitConstant(.5);
-    c1.AddPoint(.5, .75);
+    auto c1 = AutomationCurve::ACurve::CreatePtr();
+    c1->InitConstant(.5);
+    c1->AddPoint(.5, .75);
 
     AutomationCurve::MultiCurve mc;
 
     mc.curves["One"] = c1;
-    AutomationCurve::ACurve c2 = c1;
-    c2.AddPoint(.25, 0);
+    auto c2 = AutomationCurve::ACurve::CreatePtr();
+    *c2=*c1;
+    c2->AddPoint(.25, 0);
     mc.curves["Two"] = c2; //AutomationCurve::ACurve();
 
     mc.SetColor("One", AutomationCurve::MultiCurve::CurveColor(255, 64, 0));
     mc.SetColor("Two", AutomationCurve::MultiCurve::CurveColor(0, 64, 255));
+    
+    AutomationCurve::CurveEditor editor(c1);
 
     // Main loop
     while (!glfwWindowShouldClose(window)) {
@@ -126,7 +129,7 @@ int main(int, char**)
         ImGui::Begin("Select");
         for (auto& e: mc.curves){
             if (ImGui::Button(e.first.c_str()))
-                mc.activeCurve = e.first;
+                mc.SetActiveCurveName(e.first);//activeCurve = e.first;
             ImGui::SameLine();
             float col[3];
             col[0] = mc.GetColor(e.first).r/255.;
@@ -140,6 +143,13 @@ int main(int, char**)
                 col2.b = col[2]*255;
                 mc.SetColor(e.first, col2);
             }
+        }
+        ImGui::End();
+        
+        ImGui::Begin("List");
+        if (mc.ActiveCurve() != nullptr){
+            AutomationCurve::ImWidgetListView("Test list", mc.editor);
+
         }
         ImGui::End();
 
