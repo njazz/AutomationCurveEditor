@@ -47,7 +47,9 @@ void JSONCodec::ToJSONString(const ACurve& ct, std::string& s)
 
     j["default_transition_type"] = ct._defaultTransitionType;
 
-    j["cycle_type"] = Codec::ToString(ct._cycleType);
+    j["cycle_left"] = Codec::ToString(ct._cycleLeft);
+    j["cycle_right"] = Codec::ToString(ct._cycleRight);
+    
     j["value_range"] = Codec::ToString(ct._valueRange);
 
     s = j.dump(4);
@@ -73,7 +75,9 @@ bool JSONCodec::FromJSONString(ACurve& ct, const std::string& s)
 
         ct._defaultTransitionType = j["default_transition_type"];
 
-        Codec::FromString(ct._cycleType, j["cycle_type"]);
+        Codec::FromString(ct._cycleLeft, j["cycle_left"]);
+        Codec::FromString(ct._cycleRight, j["cycle_right"]);
+        
         Codec::FromString(ct._valueRange, j["value_range"]);
 
     } catch (std::exception& e) {

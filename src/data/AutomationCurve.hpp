@@ -18,6 +18,7 @@ struct FloatRange {
 };
 
 using EaseFunctor = std::function<float(const float&)>; // input value is 0..1
+using ConverterFn = std::function<float(const float&)>;
 
 struct EaseFunctorFactory {
 private:
@@ -90,18 +91,25 @@ protected:
 
     std::string _defaultTransitionType = "Linear";
 
-    CycleType _cycleType = CycleType::Hold;
+//    CycleType _cycleType = CycleType::Hold;
 
-    // TODO:
     CycleType _cycleLeft = CycleType::Hold;
     CycleType _cycleRight = CycleType::Hold;
-
+    
+    static constexpr float TimeZero() { return -1; } ;
+    
     CurveValueRange _valueRange = CurveValueRange::Positive;
+    
+    ConverterFn _convertToNormalised = [](const float&f) { return f;};
+    ConverterFn _convertFromNormalised = [](const float&f) { return f;};
+    
+    float _timeOffset = 0;
+    float _timeScale = 1;
 
     // ---
 
-    void _ClampTime(float& t);
-    void _ClampValue(float& t);
+    void _ClampTime(float& t) const;  // may return ACurve::TimeZero() in "zero" cycle mode
+    void _ClampValue(float& t) const;
 
     friend struct Codec;
     friend struct JSONCodec;
@@ -118,7 +126,13 @@ public:
     void InitTF(); // -1..1
 
     size_t Size() const;
-
+    
+    void SetCycleLeft(const CycleType& v);
+    void SetCycleRight(const CycleType& v);
+    
+    inline CycleType CycleLeft() const { return _cycleLeft;}
+    inline CycleType CycleRight() const { return _cycleRight;}
+    
     void SetPointLock(const size_t& idx, const LockEdit& l);
 
     void SetTransitionToPoint(const size_t& idx, const std::string& f);
@@ -147,6 +161,15 @@ public:
 
     void SetValue(const size_t& idx, const float& v);
     void SetTime(const size_t& idx, const float& t);
+    
+    // scaled
+    void SetScaledValue(const size_t& idx, const float& v);
+    void SetScaledTime(const size_t& idx, const float& t);
+    
+    float ScaledTimeAt(const size_t& idx);
+    float ScaledValueAt(const size_t& idx);
+    
+    void SetValueConverters(const ConverterFn& converterFrom, const ConverterFn& converterTo);
 
     //
     static ACurvePtr CreatePtr() { return std::make_shared<ACurve>(); }

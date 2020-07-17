@@ -4,30 +4,46 @@
 
 namespace AutomationCurve {
 
-void ACurve::_ClampTime(float& t)
+void ACurve::_ClampTime(float& t) const
 {
     if ((t >= 0.0) && (t <= 1))
         return;
 
-    // hold
-    if (_cycleType == CycleType::Hold) {
-        if (t > 1)
+    if (t > 1) {
+        // hold
+        if (_cycleRight == CycleType::Hold) {
             t = 1;
-        if (t < 0)
+        }
+
+        if (_cycleRight == CycleType::Zero) {
+            t = ACurve::TimeZero();
+        }
+
+        if (_cycleRight == CycleType::Repeat) {
+            t = fmodf(t, 1);
+        }
+
+        // todo: mirror
+    }
+
+    if (t < 0) {
+        if (_cycleLeft == CycleType::Hold) {
             t = 0;
-        return;
-    }
+        }
 
-    // zero
-    if (_cycleType == CycleType::Zero) {
-        t = 0;
-        return;
-    }
+        if (_cycleLeft == CycleType::Zero) {
+            t = ACurve::TimeZero();
+        }
 
-    // TODO: mirror, repeat
+        if (_cycleLeft == CycleType::Repeat) {
+            t = 1 - fmodf(-t, 1);
+        }
+
+        // todo: mirror
+    }
 }
 
-void ACurve::_ClampValue(float& v)
+void ACurve::_ClampValue(float& v) const
 {
     if (v > 1) {
         v = 1;
@@ -55,7 +71,11 @@ void ACurve::AddPoint(const float& fract, const float& value)
     _ClampValue(value_);
 
     auto fract_ = fract;
+
+    // todo: change
     _ClampTime(fract_);
+    if (fract_ == ACurve::TimeZero())
+        return;
 
     auto tf = EaseFunctorFactory::Create(_defaultTransitionType);
 
@@ -130,6 +150,15 @@ void ACurve::InitTF()
 } // -1..1
 
 size_t ACurve::Size() const { return _pointPositions.size(); }
+
+void ACurve::SetCycleLeft(const CycleType& v)
+{
+    _cycleLeft = v;
+}
+void ACurve::SetCycleRight(const CycleType& v)
+{
+    _cycleRight = v;
+}
 
 void ACurve::SetPointLock(const size_t& idx, const LockEdit& l)
 {
@@ -221,13 +250,13 @@ const FloatRange ACurve::TimeRangeForPoint(const size_t& idx)
 
 std::vector<float> ACurve::RawValues() { return _pointValues; }
 std::vector<float> ACurve::RawPositions() { return _pointPositions; }
-std::vector<std::pair<float,float>> ACurve::RawPoints(){
-    std::vector<std::pair<float,float>> ret;
-    for (int i=0;i<_pointValues.size();i++)
-    {
-        std::pair<float,float> p;
+std::vector<std::pair<float, float> > ACurve::RawPoints()
+{
+    std::vector<std::pair<float, float> > ret;
+    for (int i = 0; i < _pointValues.size(); i++) {
+        std::pair<float, float> p;
         p.first = _pointValues[i];
-        p.second= _pointPositions[i];
+        p.second = _pointPositions[i];
         ret[i] = p;
     }
     return ret;
@@ -239,8 +268,13 @@ const float ACurve::ValueAt(const size_t& idx) const { return _pointValues.at(id
 const LockEdit ACurve::LockAt(const size_t& idx) const { return _pointLock.at(idx); }
 
 // main:
-float ACurve::ValueAtFraction(const float& f) const
+float ACurve::ValueAtFraction(const float& f0) const
 {
+    float f = f0;
+    _ClampTime(f);
+    if (f == ACurve::TimeZero())
+        return 0;
+
     auto lp = LeftPointIndexAtFraction(f);
     auto rp = RightPointIndexAtFraction(f);
 
@@ -289,7 +323,11 @@ void ACurve::SetTime(const size_t& idx, const float& t)
     if (idx >= Size())
         return;
     auto value = t;
+    // todo: remove/change?
     _ClampTime(value);
+
+    if (value == ACurve::TimeZero())
+        return;
 
     auto idx2 = idx + 1;
     if (idx2 < Size())
@@ -303,7 +341,32 @@ void ACurve::SetTime(const size_t& idx, const float& t)
     _pointPositions[idx] = value;
 }
 
+// ---
 
+void ACurve::SetScaledValue(const size_t& idx, const float& v)
+{
+    SetValue(idx, _convertToNormalised(v));
+}
+void ACurve::SetScaledTime(const size_t& idx, const float& t)
+{
+    SetTime(idx, (_timeScale == 0) ? 0 : (t - _timeOffset) / _timeScale);
+}
+
+float ACurve::ScaledTimeAt(const size_t& idx)
+{
+    return TimeAt(idx) * _timeScale + _timeOffset;
+}
+
+float ACurve::ScaledValueAt(const size_t& idx)
+{
+    return _convertFromNormalised(TimeAt(idx));
+}
+
+void ACurve::SetValueConverters(const ConverterFn& converterFrom, const ConverterFn& converterTo)
+{
+    _convertToNormalised = converterFrom;
+    _convertFromNormalised = converterTo;
+}
 
 // ---
 
