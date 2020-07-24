@@ -7,3 +7,6 @@
 - float vec widget: vertical bars
 - float vec widget: horizontal split
 
+- fix crosshair when not hovered
+- list view bool out
+

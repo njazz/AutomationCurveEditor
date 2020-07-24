@@ -14,15 +14,15 @@ void ACurve::_ClampTime(float& t) const
     if (t > 1) {
         // hold
         if (_cycleRight == CycleType::Hold) {
-            t = 1;
+//            t = 1;
         }
 
         if (_cycleRight == CycleType::Zero) {
-            t = ACurve::TimeZero();
+//            t = ACurve::TimeZero();
         }
 
         if (_cycleRight == CycleType::Repeat) {
-            t = fmodf(t, 1);
+//            t = fmodf(t, 1);
         }
 
         // todo: mirror
@@ -30,15 +30,15 @@ void ACurve::_ClampTime(float& t) const
 
     if (t < 0) {
         if (_cycleLeft == CycleType::Hold) {
-            t = 0;
+//            t = 0;
         }
 
         if (_cycleLeft == CycleType::Zero) {
-            t = ACurve::TimeZero();
+//            t = ACurve::TimeZero();
         }
 
         if (_cycleLeft == CycleType::Repeat) {
-            t = 1 - fmodf(-t, 1);
+//            t = 1 - fmodf(-t, 1);
         }
 
         // todo: mirror
@@ -65,19 +65,22 @@ void ACurve::_ClampValue(float& v) const
 
 void ACurve::AddPoint(const float& fract, const float& value)
 {
-    auto idx = LeftPointIndexAtFraction(fract);
+    // todo: change
+    auto fract_ = fract;
+    _ClampTime(fract_);
+    if (fract_ == ACurve::TimeZero())
+        return;
+    
+    auto idx = LeftPointIndexAtFraction(fract_);
     if (idx < 0)
         idx = 0;
 
     auto value_ = value;
     _ClampValue(value_);
 
-    auto fract_ = fract;
+    
 
-    // todo: change
-    _ClampTime(fract_);
-    if (fract_ == ACurve::TimeZero())
-        return;
+    
 
     auto tf = EaseFunctorFactory::Create(_defaultTransitionType);
 

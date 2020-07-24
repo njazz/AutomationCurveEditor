@@ -23,6 +23,7 @@ const ACurve CurveConverter::AsLineApproximation(const size_t res)
     
     if (!curve) return ret;
     
+    ret.Clear();
 
     for (size_t i = 0; i < res; i++) {
         float fract = float(i) / float(res);
@@ -36,7 +37,6 @@ const std::vector<std::pair<float, float> > CurveConverter::AsPoints(const size_
     std::vector<std::pair<float, float> > ret;
     if (!curve) return ret;
     
-
     for (size_t i = 0; i < res; i++) {
         std::pair<float, float> v;
         float fract = float(i) / float(res);
@@ -53,7 +53,11 @@ const ACurve CurveConverter::AsApproximation(const size_t numsteps)
     
     if (!curve) return ret;
     
-
+    if (curve->Size()==0) return *curve;
+    
+    ret.Clear();
+    ret.AddPoint(0, curve->ValueAt(0));
+    
     float t_start = 0;
     for (int i = 1; i < curve->Size(); i++) {
         float t_end = curve->TimeAt(i);
