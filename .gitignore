@@ -1,2 +1,3 @@
 xcode/*
 build-osx/*
+build-win-mingw/*

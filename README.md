@@ -11,12 +11,15 @@ version 0.0.2<br>
 
 available widgets:<br>
 
-* Curve Editor<br>
-* Overview for single curve<br>
-* Multi curve editor<br>
-* Multi curve overview<br>
-* List Editor<br>
-<br>
-<br>
+* [x] Curve Editor<br>
+* [x] Overview for single curve<br>
+* [x] Multi curve editor<br>
+* [x] Multi curve overview<br>
+* [x] List Editor<br>
+* [ ] float vector as bars
+* [ ] float vector as slices
+* [ ] sequence track with items
+* [ ] sequence multi track widget
+* [ ] timeline view
 <br>
 
