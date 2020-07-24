@@ -357,11 +357,13 @@ bool ImWidget(const std::string& name, const ImVec2& size, CurveEditor& curve, c
     return ImWidget(name, size, curve, vr);
 }
 
-void ImWidgetListView(const std::string& name, CurveEditor& editor)
+bool ImWidgetListView(const std::string& name, CurveEditor& editor)
 {
     if (editor.curve == nullptr)
-        return;
-
+        return false;
+    
+    bool ret = false;
+    
     using namespace ImGui;
 
     int numColumns = 7;
@@ -385,6 +387,7 @@ void ImWidgetListView(const std::string& name, CurveEditor& editor)
 
         if (DragFloat(("##list_time" + std::to_string(i)).c_str(), &t, .01, 0, 1)) {
             editor.curve->SetTime(i, t);
+            ret = true;
         }
         NextColumn();
 
@@ -392,6 +395,7 @@ void ImWidgetListView(const std::string& name, CurveEditor& editor)
 
         if (DragFloat(("##list_value" + std::to_string(i)).c_str(), &val, .01, 0, 1)) {
             editor.curve->SetValue(i, val);
+            ret = true;
         }
         NextColumn();
 
@@ -402,11 +406,13 @@ void ImWidgetListView(const std::string& name, CurveEditor& editor)
             auto v = editor.curve->ValueAtFraction(t);
 
             editor.curve->AddPoint(t, v);
+            ret = true;
         }
         NextColumn();
 
         if (Button(("-##list_remove" + std::to_string(i)).c_str())) {
             removeIdx = i;
+            ret = true;
         }
         NextColumn();
 
@@ -418,6 +424,7 @@ void ImWidgetListView(const std::string& name, CurveEditor& editor)
                 }
             }
             EndCombo();
+            ret = true;
         }
         NextColumn();
 
@@ -425,14 +432,14 @@ void ImWidgetListView(const std::string& name, CurveEditor& editor)
 
         if ((i > 0) && (i != (editor.curve->Size() - 1))) {
             if (BeginCombo(("##list_locks" + std::to_string(i)).c_str(), lock.c_str())) {
-                if (Selectable("None"))
-                    editor.curve->SetPointLock(i, LockEdit::None);
-                if (Selectable("Lock X"))
-                    editor.curve->SetPointLock(i, LockEdit::LockX);
-                if (Selectable("Lock Y"))
-                    editor.curve->SetPointLock(i, LockEdit::LockY);
-                if (Selectable("Lock Both"))
-                    editor.curve->SetPointLock(i, LockEdit::LockBoth);
+                if (Selectable("None")){
+                    editor.curve->SetPointLock(i, LockEdit::None);ret=true;}
+                if (Selectable("Lock X")){
+                    editor.curve->SetPointLock(i, LockEdit::LockX);ret=true;}
+                if (Selectable("Lock Y")){
+                    editor.curve->SetPointLock(i, LockEdit::LockY);ret=true;}
+                if (Selectable("Lock Both")){
+                    editor.curve->SetPointLock(i, LockEdit::LockBoth);ret=true;}
 
                 EndCombo();
             }
@@ -444,6 +451,8 @@ void ImWidgetListView(const std::string& name, CurveEditor& editor)
 
     if (removeIdx != -1)
         editor.curve->RemovePointAt(removeIdx);
+    
+    return ret;
 }
 
 bool ImWidget(const std::string& name, const ImVec2& size, CurveEditor& curve, const ImVec2& viewRange)

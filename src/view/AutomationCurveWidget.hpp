@@ -7,7 +7,7 @@ namespace AutomationCurve{
     
     bool ImWidgetOverview(const std::string& name,const ImVec2& size,ACurve& curve, float* scroll = 0, float* zoomRange = 0 );
     
-    void ImWidgetListView(const std::string& name, CurveEditor& curve);
+    bool ImWidgetListView(const std::string& name, CurveEditor& curve);
     
     bool ImWidgetMulti(const std::string& name, const ImVec2& size, MultiCurve& curve, const float& scroll = 0.0f, const float& zoomRange = 1.0f);
     bool ImWidgetMulti(const std::string& name, const ImVec2& size, MultiCurve& curve, const ImVec2& viewRange);

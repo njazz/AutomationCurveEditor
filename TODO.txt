@@ -6,7 +6,9 @@
 
 - float vec widget: vertical bars
 - float vec widget: horizontal split
+- sequencer track widget
+- sequencer multitrack widget
+- timeline widget
 
-- fix crosshair when not hovered
 - list view bool out
 
