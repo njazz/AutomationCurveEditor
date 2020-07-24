@@ -1,3 +1,4 @@
+#include "CommonTypes.hpp"
 
 namespace AutomationCurve {
 namespace Codec {
@@ -20,7 +21,7 @@ namespace Codec {
 
     // ---
 
-    bool Codec::FromString(CycleType& ct, const std::string& s)
+    bool FromString(CycleType& ct, const std::string& s)
     {
         if (s.compare("Hold") == 0) {
             ct = CycleType::Hold;
