@@ -10,12 +10,11 @@
 #include <functional>
 #include <memory>
 
+#include "CommonTypes.hpp"
+
 namespace AutomationCurve {
 
-struct FloatRange {
-    float min = 0;
-    float max = 1;
-};
+
 
 using EaseFunctor = std::function<float(const float&)>; // input value is 0..1
 using ConverterFn = std::function<float(const float&)>;
@@ -52,12 +51,7 @@ struct SplineControlPoints {
 //    void operator()(float&, const float&) {}
 //};
 
-enum class CycleType {
-    Hold,
-    Zero,
-    Mirror,
-    Repeat
-};
+
 
 enum class CurveValueRange {
     Positive, // 0..1 for parameters
@@ -71,7 +65,7 @@ enum class LockEdit {
     LockBoth
 };
 
-struct Codec;
+//struct Codec;
 struct JSONCodec;
 
 struct ACurve;
@@ -111,7 +105,7 @@ protected:
     void _ClampTime(float& t) const;  // may return ACurve::TimeZero() in "zero" cycle mode
     void _ClampValue(float& t) const;
 
-    friend struct Codec;
+//    friend struct Codec;
     friend struct JSONCodec;
     // ---
 public:
@@ -295,14 +289,14 @@ public:
 
 // ---
 
-struct Codec {
-    static std::string ToString(const CycleType& ct);
-    static std::string ToString(const CurveValueRange& ct);
-    static std::string ToString(const LockEdit& ct);
+namespace Codec {
+//    static std::string ToString(const CycleType& ct);
+     std::string ToString(const CurveValueRange& ct);
+     std::string ToString(const LockEdit& ct);
 
-    static bool FromString(CycleType& ct, const std::string& s);
-    static bool FromString(CurveValueRange& ct, const std::string& s);
-    static bool FromString(LockEdit& ct, const std::string& s);
+//    static bool FromString(CycleType& ct, const std::string& s);
+     bool FromString(CurveValueRange& ct, const std::string& s);
+     bool FromString(LockEdit& ct, const std::string& s);
 
     // mc color - json (impl)
     // mc json
