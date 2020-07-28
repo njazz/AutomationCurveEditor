@@ -66,7 +66,7 @@ enum class LockEdit {
 };
 
 //struct Codec;
-struct JSONCodec;
+//struct JSONCodec;
 
 struct ACurve;
 using ACurvePtr = std::shared_ptr<ACurve>;
@@ -106,7 +106,7 @@ protected:
     void _ClampValue(float& t) const;
 
 //    friend struct Codec;
-    friend struct JSONCodec;
+//    friend struct JSONCodec;
     // ---
 public:
     ACurve() { InitConstant(0); }
@@ -142,9 +142,18 @@ public:
     void SetDefaultTransitionType(const std::string& tt) { _defaultTransitionType = tt; }
     const std::string DefaultTransitionType() const { return _defaultTransitionType; }
 
-    std::vector<float> RawValues();
-    std::vector<float> RawPositions();
-    std::vector<std::pair<float, float> > RawPoints();
+    std::vector<float> RawValues() const;
+    std::vector<float> RawPositions() const;
+    std::vector<EaseFunctor> RawTransitions() const { return _transitionToPoint; };
+    std::vector<std::string> RawTransitionTypenames() const { return _typenameOfTransitionToPoint; };
+    std::vector<LockEdit> RawPointLocks() const { return _pointLock;}
+    CurveValueRange RawValueRange() const { return _valueRange; }
+    
+    // for deserialization
+    void SetRawPoints(const std::vector<float>& pos, const std::vector<float>& v, std::vector<LockEdit> locks);
+    void SetRawValueRange(const CurveValueRange& vr) { _valueRange = vr; }
+    
+    std::vector<std::pair<float, float> > RawPoints();  // -> GetRawPoints
 
     const float TimeAt(const size_t& idx) const;
     const float ValueAt(const size_t& idx) const;

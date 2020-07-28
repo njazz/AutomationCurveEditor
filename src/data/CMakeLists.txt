@@ -22,6 +22,7 @@ ${CMAKE_CURRENT_SOURCE_DIR}/SequenceEditor.cpp
 )
 
 set_property (GLOBAL PROPERTY HEADERS_AutomationCurve
+${CMAKE_CURRENT_SOURCE_DIR}/CommonTypes.hpp
 ${CMAKE_CURRENT_SOURCE_DIR}/AutomationCurve.hpp
 ${CMAKE_CURRENT_SOURCE_DIR}/FVector.hpp
 ${CMAKE_CURRENT_SOURCE_DIR}/Sequence.hpp

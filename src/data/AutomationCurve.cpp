@@ -253,8 +253,21 @@ const FloatRange ACurve::TimeRangeForPoint(const size_t& idx)
     return ret;
 }
 
-std::vector<float> ACurve::RawValues() { return _pointValues; }
-std::vector<float> ACurve::RawPositions() { return _pointPositions; }
+std::vector<float> ACurve::RawValues() const { return _pointValues; }
+std::vector<float> ACurve::RawPositions() const { return _pointPositions; }
+
+ void ACurve::SetRawPoints(const std::vector<float>& pos, const std::vector<float>& v, std::vector<LockEdit> locks){
+    _pointPositions = pos;
+    _pointValues = v;
+    _pointLock = locks;
+    
+    _transitionToPoint.clear();
+    _typenameOfTransitionToPoint.clear();
+    
+    _transitionToPoint.resize(pos.size());
+    _typenameOfTransitionToPoint.resize(pos.size());
+ }
+ 
 std::vector<std::pair<float, float> > ACurve::RawPoints()
 {
     std::vector<std::pair<float, float> > ret;

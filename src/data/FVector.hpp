@@ -6,32 +6,36 @@
 //#include <functional>
 #include <memory>
 
-// common:
+#include "CommonTypes.hpp"
 
-enum class CycleType {
-    Hold,
-    Zero,
-    Mirror,
-    Repeat
-};
-
-struct FloatRange {
-    float min = 0;
-    float max = 1;
-};
+//// common:
+//
+//enum class CycleType {
+//    Hold,
+//    Zero,
+//    Mirror,
+//    Repeat
+//};
+//
+//struct FloatRange {
+//    float min = 0;
+//    float max = 1;
+//};
+//
+//// ---
+//struct Codec{
+//     static std::string ToString(const CycleType& ct);
+////    static std::string ToString(const CurveValueRange& ct);
+////    static std::string ToString(const LockEdit& ct);
+//
+//    static bool FromString(CycleType& ct, const std::string& s);
+////    static bool FromString(CurveValueRange& ct, const std::string& s);
+////    static bool FromString(LockEdit& ct, const std::string& s);
+//};
 
 // ---
-struct Codec{
-     static std::string ToString(const CycleType& ct);
-//    static std::string ToString(const CurveValueRange& ct);
-//    static std::string ToString(const LockEdit& ct);
+namespace AutomationCurve{
 
-    static bool FromString(CycleType& ct, const std::string& s);
-//    static bool FromString(CurveValueRange& ct, const std::string& s);
-//    static bool FromString(LockEdit& ct, const std::string& s);
-};
-
-// ---
 struct FVector;
 using FVectorPtr = std::shared_ptr<FVector>;
 
@@ -49,7 +53,7 @@ protected:
     
     void _ClampTime(float& t) const;
     
-    friend struct Codec;
+//    friend struct Codec;
     friend struct JSONCodec;
     
     public:
@@ -72,7 +76,7 @@ protected:
 
     const FloatRange TimeRangeForPoint(const size_t& idx);
     
-    std::vector<float> RawPositions();
+    std::vector<float> RawPositions() const;
     
     const float TimeAt(const size_t& idx) const;
     const bool LockAt(const size_t& idx) const;
@@ -80,7 +84,23 @@ protected:
     void SetTime(const size_t& idx, const float& t);
     
     void SetScaledTime(const size_t& idx, const float& t);
-     float ScaledTimeAt(const size_t& idx);
+    float ScaledTimeAt(const size_t& idx);
+    
+    size_t Size() const;// { return _pointPositions.size(); }
 
     static FVectorPtr CreatePtr() { return std::make_shared<FVector>(); }
 };
+
+struct FVectorConverter {
+    // todo:
+    std::vector<float> ToVec() {return {};}   //
+    void ToACurve();
+    void MergeToACurve_1();   // FVector, FVector
+    void MergeToACurve_2();   // FVector, FVector
+    
+    void AsFloatVector();        // with fixed resolution
+    void Subdivide();            // subdivide
+    
+};
+
+}; // namespace

@@ -760,7 +760,16 @@ bool ImWidgetOverviewMulti(const std::string& name, const ImVec2& size, MultiCur
             ret = true;
         }
     }
-
+    
+    if (GetIO().KeyMods == ImGuiKeyModFlags_Shift) {
+        if (hovered && (scroll != nullptr) && (zoomRange != nullptr)  && IsMouseDragging(ImGuiMouseButton_Left)) {
+            *scroll += GetMouseDragDelta().x / (bb.Max.x - bb.Min.x);
+            ResetMouseDragDelta();
+            if (*scroll<0)
+                *scroll = 0;
+        }
+    }
+    
     // new
     if (GetIO().KeyMods == ImGuiKeyModFlags_None) {
         if (hovered && (scroll != nullptr) && (zoomRange != nullptr) && IsMouseClicked(ImGuiMouseButton_Left && !IsMouseDragging(ImGuiMouseButton_Left))) {

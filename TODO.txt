@@ -11,4 +11,10 @@
 - timeline widget
 
 - list view bool out
+- list r/o view
 
+- fvec converters: acurve; vec<float>
+
+- optional selection, playhead
+- fix overview in header
+- clipping rect

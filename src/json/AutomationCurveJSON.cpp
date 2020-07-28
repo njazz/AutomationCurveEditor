@@ -6,6 +6,7 @@
 using json = nlohmann::json;
 
 namespace AutomationCurve {
+namespace JSONCodec{
     // ---
 
 template <typename T>
@@ -33,37 +34,42 @@ bool _FromJSON(std::vector<T>& ret, const json& j)
     return true;
 }
 
-void JSONCodec::ToJSONString(const ACurve& ct, std::string& s)
+void ToJSONString(const ACurve& ct, std::string& s)
 {
 
     json j;
 
-    j["point_positions"] = ct._pointPositions;
-    j["point_values"] = ct._pointValues;
+    j["point_positions"] = ct.RawPositions();//_pointPositions;
+    j["point_values"] = ct.RawValues();//_pointValues;
 
-    j["transition_types"] = ct._typenameOfTransitionToPoint;
+    j["transition_types"] = ct.RawTransitionTypenames();//_typenameOfTransitionToPoint;
 
-    j["point_lock"] = _ToJSON(ct._pointLock);
+    j["point_lock"] = _ToJSON(ct.RawPointLocks());
 
-    j["default_transition_type"] = ct._defaultTransitionType;
+    j["default_transition_type"] = ct.DefaultTransitionType();
 
-    j["cycle_left"] = Codec::ToString(ct._cycleLeft);
-    j["cycle_right"] = Codec::ToString(ct._cycleRight);
+    j["cycle_left"] = Codec::ToString(ct.CycleLeft());
+    j["cycle_right"] = Codec::ToString(ct.CycleRight());
     
-    j["value_range"] = Codec::ToString(ct._valueRange);
+    j["value_range"] = Codec::ToString(ct.RawValueRange());
 
     s = j.dump(4);
 }
 
-bool JSONCodec::FromJSONString(ACurve& ct, const std::string& s)
+bool FromJSONString(ACurve& ct, const std::string& s)
 {
 
     try {
         auto j = json::parse(s);
 
-        ct._pointPositions = j["point_positions"].get<std::vector<float> >();
-        ct._pointValues = j["point_values"].get<std::vector<float> >();
-
+        auto pos = j["point_positions"].get<std::vector<float> >();     // ct._pointPositions
+        auto val = j["point_values"].get<std::vector<float> >();        // ct._pointValues
+        
+        std::vector<LockEdit> locks;                                   // ct._pointLock
+        _FromJSON(locks, j["point_lock"]);
+        
+        ct.SetRawPoints(pos, val, locks);
+        
         size_t idx = 0;
         auto transitionTypes = j["transition_types"];
         for (auto& e : transitionTypes) {
@@ -71,14 +77,23 @@ bool JSONCodec::FromJSONString(ACurve& ct, const std::string& s)
             idx++;
         };
 
-        _FromJSON(ct._pointLock, j["point_lock"]);
-
-        ct._defaultTransitionType = j["default_transition_type"];
-
-        Codec::FromString(ct._cycleLeft, j["cycle_left"]);
-        Codec::FromString(ct._cycleRight, j["cycle_right"]);
+        //
         
-        Codec::FromString(ct._valueRange, j["value_range"]);
+        auto defType = j["default_transition_type"];
+        ct.SetDefaultTransitionType(defType);
+
+        CycleType ctl;
+        CycleType ctr;
+        CurveValueRange vr;
+        
+        Codec::FromString(ctl, j["cycle_left"]);
+        Codec::FromString(ctr, j["cycle_right"]);
+        
+        Codec::FromString(vr, j["value_range"]);
+        
+        ct.SetCycleLeft(ctl);
+        ct.SetCycleRight(ctr);
+        ct.SetRawValueRange(vr);
 
     } catch (std::exception& e) {
         printf("%s\n", e.what());
@@ -87,4 +102,6 @@ bool JSONCodec::FromJSONString(ACurve& ct, const std::string& s)
 
     return true;
 }
-};
+
+} // namespace JSONCodec
+} // namespace AutomationCurve
