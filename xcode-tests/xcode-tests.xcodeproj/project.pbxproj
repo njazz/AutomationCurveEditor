@@ -1,0 +1,376 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 48;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		3162507324D21004009F72D7 /* CurveEditor_Tests.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3162507224D21004009F72D7 /* CurveEditor_Tests.mm */; };
+		3162507924D21022009F72D7 /* libCurveEditor.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3162506624D20FEC009F72D7 /* libCurveEditor.a */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		3162506524D20FEC009F72D7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3162505A24D20FEC009F72D7 /* CurveEditorBundle.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 18198972073B4CED9B2EA18E;
+			remoteInfo = CurveEditor;
+		};
+		3162506724D20FEC009F72D7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3162505A24D20FEC009F72D7 /* CurveEditorBundle.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 5C48003E1B1E4476B1F9E777;
+			remoteInfo = CurveEditorTestApp;
+		};
+		3162506924D20FEC009F72D7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3162505A24D20FEC009F72D7 /* CurveEditorBundle.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = E8CB28F3246E4A11B49823D1;
+			remoteInfo = glfw;
+		};
+		3162507A24D2105E009F72D7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3162505A24D20FEC009F72D7 /* CurveEditorBundle.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = AA8E65F1579145B099031266;
+			remoteInfo = CurveEditor;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		3162505A24D20FEC009F72D7 /* CurveEditorBundle.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CurveEditorBundle.xcodeproj; path = ../xcode/CurveEditorBundle.xcodeproj; sourceTree = "<group>"; };
+		3162506F24D21004009F72D7 /* CurveEditor-Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "CurveEditor-Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		3162507224D21004009F72D7 /* CurveEditor_Tests.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = CurveEditor_Tests.mm; sourceTree = "<group>"; };
+		3162507424D21004009F72D7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		3162506C24D21004009F72D7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3162507924D21022009F72D7 /* libCurveEditor.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		3162505324D20FE0009F72D7 = {
+			isa = PBXGroup;
+			children = (
+				3162505A24D20FEC009F72D7 /* CurveEditorBundle.xcodeproj */,
+				3162507124D21004009F72D7 /* CurveEditor-Tests */,
+				3162507024D21004009F72D7 /* Products */,
+				3162507824D21022009F72D7 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		3162505B24D20FEC009F72D7 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				3162506624D20FEC009F72D7 /* libCurveEditor.a */,
+				3162506824D20FEC009F72D7 /* CurveEditorTestApp */,
+				3162506A24D20FEC009F72D7 /* libglfw3.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		3162507024D21004009F72D7 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				3162506F24D21004009F72D7 /* CurveEditor-Tests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		3162507124D21004009F72D7 /* CurveEditor-Tests */ = {
+			isa = PBXGroup;
+			children = (
+				3162507224D21004009F72D7 /* CurveEditor_Tests.mm */,
+				3162507424D21004009F72D7 /* Info.plist */,
+			);
+			path = "CurveEditor-Tests";
+			sourceTree = "<group>";
+		};
+		3162507824D21022009F72D7 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		3162506E24D21004009F72D7 /* CurveEditor-Tests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3162507524D21004009F72D7 /* Build configuration list for PBXNativeTarget "CurveEditor-Tests" */;
+			buildPhases = (
+				3162506B24D21004009F72D7 /* Sources */,
+				3162506C24D21004009F72D7 /* Frameworks */,
+				3162506D24D21004009F72D7 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3162507B24D2105E009F72D7 /* PBXTargetDependency */,
+			);
+			name = "CurveEditor-Tests";
+			productName = "CurveEditor-Tests";
+			productReference = 3162506F24D21004009F72D7 /* CurveEditor-Tests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		3162505424D20FE0009F72D7 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0910;
+				TargetAttributes = {
+					3162506E24D21004009F72D7 = {
+						CreatedOnToolsVersion = 9.1;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 3162505724D20FE0009F72D7 /* Build configuration list for PBXProject "xcode-tests" */;
+			compatibilityVersion = "Xcode 8.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 3162505324D20FE0009F72D7;
+			productRefGroup = 3162507024D21004009F72D7 /* Products */;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 3162505B24D20FEC009F72D7 /* Products */;
+					ProjectRef = 3162505A24D20FEC009F72D7 /* CurveEditorBundle.xcodeproj */;
+				},
+			);
+			projectRoot = "";
+			targets = (
+				3162506E24D21004009F72D7 /* CurveEditor-Tests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		3162506624D20FEC009F72D7 /* libCurveEditor.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libCurveEditor.a;
+			remoteRef = 3162506524D20FEC009F72D7 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		3162506824D20FEC009F72D7 /* CurveEditorTestApp */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			name = CurveEditorTestApp;
+			path = CurveEditorTestApp.app;
+			remoteRef = 3162506724D20FEC009F72D7 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		3162506A24D20FEC009F72D7 /* libglfw3.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libglfw3.a;
+			remoteRef = 3162506924D20FEC009F72D7 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
+/* Begin PBXResourcesBuildPhase section */
+		3162506D24D21004009F72D7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		3162506B24D21004009F72D7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3162507324D21004009F72D7 /* CurveEditor_Tests.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		3162507B24D2105E009F72D7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = CurveEditor;
+			targetProxy = 3162507A24D2105E009F72D7 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		3162505824D20FE0009F72D7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Debug;
+		};
+		3162505924D20FE0009F72D7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Release;
+		};
+		3162507624D21004009F72D7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 85478UQJJR;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = $PROJECT_DIR/../src/data;
+				INFOPLIST_FILE = "CurveEditor-Tests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.alexnadzharov.Cocoa-App.CurveEditor-Tests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		3162507724D21004009F72D7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 85478UQJJR;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = $PROJECT_DIR/../src/data;
+				INFOPLIST_FILE = "CurveEditor-Tests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.alexnadzharov.Cocoa-App.CurveEditor-Tests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		3162505724D20FE0009F72D7 /* Build configuration list for PBXProject "xcode-tests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3162505824D20FE0009F72D7 /* Debug */,
+				3162505924D20FE0009F72D7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3162507524D21004009F72D7 /* Build configuration list for PBXNativeTarget "CurveEditor-Tests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3162507624D21004009F72D7 /* Debug */,
+				3162507724D21004009F72D7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 3162505424D20FE0009F72D7 /* Project object */;
+}

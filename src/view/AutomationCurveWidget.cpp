@@ -483,12 +483,13 @@ bool ImWidget(const std::string& name, const ImVec2& size, CurveEditor& curve, c
     PushClipRect(bb.Min, bb.Max, false);
 
     __DrawGrid(window, bb, range_x, offset_x, mult_x);
+    
     __MainPopupMenu(curve);
 
     ret = __Editorinteractions(window, bb, name, curve, range_x, offset_x, mult_x);
 
     auto COLOR = IM_COL32(192, 168, 0, 255);
-
+    
     __DrawSmoothCurve(window, bb, *curve.curve, COLOR, offset_x, mult_x);
     __DrawEditorFeatures(window, bb, curve, COLOR, offset_x, mult_x);
 

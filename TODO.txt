@@ -1,4 +1,3 @@
-- Limit draw calls
 - Add time offset/scale in overview widgets
 - Add tests
 - Test widget bool output
@@ -17,4 +16,8 @@
 
 - optional selection, playhead
 - fix overview in header
+
+- Limit draw calls
 - clipping rect
+
+- single widget mouse actions

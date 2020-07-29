@@ -14,8 +14,6 @@
 
 namespace AutomationCurve {
 
-
-
 using EaseFunctor = std::function<float(const float&)>; // input value is 0..1
 using ConverterFn = std::function<float(const float&)>;
 
@@ -166,6 +164,12 @@ public:
     void SetTime(const size_t& idx, const float& t);
     
     // scaled
+    void SetTimeOffset(const float f) { _timeOffset = f; }
+    void SetTimeScale(const float& f) { _timeScale = f; }
+    
+    const float TimeOffset() { return _timeOffset; }
+    const float TimeScale() { return _timeScale; }
+    
     void SetScaledValue(const size_t& idx, const float& v);
     void SetScaledTime(const size_t& idx, const float& t);
     
@@ -294,6 +298,10 @@ public:
 
     CurveColor GetColor(const std::string& name);
     void SetColor(const std::string& name, const CurveColor& c);
+    
+    //
+    float GetMinTimeOffset();
+    float GetMaxTimeScale();
 };
 
 // ---

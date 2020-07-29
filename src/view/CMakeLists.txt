@@ -8,6 +8,7 @@ ${CMAKE_CURRENT_SOURCE_DIR}/AutomationCurveWidget.cpp
 ${CMAKE_CURRENT_SOURCE_DIR}/FVectorWidget.cpp
 ${CMAKE_CURRENT_SOURCE_DIR}/SequenceWidget.cpp
 ${CMAKE_CURRENT_SOURCE_DIR}/TimelineWidget.cpp
+${CMAKE_CURRENT_SOURCE_DIR}/ColorSequenceWidget.cpp
 
 
 )

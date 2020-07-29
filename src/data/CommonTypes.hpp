@@ -1,3 +1,6 @@
+#ifndef COMMONTYPES_HPP
+#define COMMONTYPES_HPP
+
 #include <string>
 
 namespace AutomationCurve{
@@ -21,3 +24,5 @@ namespace Codec {
 };
 
 }
+
+#endif

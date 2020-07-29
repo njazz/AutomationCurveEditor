@@ -102,20 +102,20 @@ int main(int, char**)
 
         //
 
-//        ImGui::Begin("Widget");
-//
-//        ImGui::SetNextItemWidth(150);
-//        ImGui::SliderFloat("Scroll", &scroll, 0, 1);
-//        ImGui::SameLine();
-//        ImGui::SetNextItemWidth(150);
-//        ImGui::SliderFloat("Zoom", &zoom, 0, 1);
-//
-//        AutomationCurve::ImWidgetOverview("Test widget Overview", ImVec2(800, 96), c1, &scroll, &zoom);
-//        AutomationCurve::ImWidget("Test widget", ImVec2(800, 480), c1, scroll, zoom);
-//
-//        AutomationCurve::ImWidgetListView("View", c1);
-//
-//        ImGui::End();
+        ImGui::Begin("Widget");
+
+        ImGui::SetNextItemWidth(150);
+        ImGui::SliderFloat("Scroll", &scroll, 0, 1);
+        ImGui::SameLine();
+        ImGui::SetNextItemWidth(150);
+        ImGui::SliderFloat("Zoom", &zoom, 0, 1);
+
+        AutomationCurve::ImWidgetOverview("Test widget Overview", ImVec2(800, 96), editor, &scroll, &zoom);
+        AutomationCurve::ImWidget("Test widget", ImVec2(800, 480), editor, scroll, zoom);
+
+        AutomationCurve::ImWidgetListView("View", editor);
+
+        ImGui::End();
 
         //
 

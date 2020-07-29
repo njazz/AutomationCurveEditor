@@ -14,15 +14,15 @@ void ACurve::_ClampTime(float& t) const
     if (t > 1) {
         // hold
         if (_cycleRight == CycleType::Hold) {
-//            t = 1;
+            //            t = 1;
         }
 
         if (_cycleRight == CycleType::Zero) {
-//            t = ACurve::TimeZero();
+            //            t = ACurve::TimeZero();
         }
 
         if (_cycleRight == CycleType::Repeat) {
-//            t = fmodf(t, 1);
+            //            t = fmodf(t, 1);
         }
 
         // todo: mirror
@@ -30,15 +30,15 @@ void ACurve::_ClampTime(float& t) const
 
     if (t < 0) {
         if (_cycleLeft == CycleType::Hold) {
-//            t = 0;
+            //            t = 0;
         }
 
         if (_cycleLeft == CycleType::Zero) {
-//            t = ACurve::TimeZero();
+            //            t = ACurve::TimeZero();
         }
 
         if (_cycleLeft == CycleType::Repeat) {
-//            t = 1 - fmodf(-t, 1);
+            //            t = 1 - fmodf(-t, 1);
         }
 
         // todo: mirror
@@ -70,17 +70,13 @@ void ACurve::AddPoint(const float& fract, const float& value)
     _ClampTime(fract_);
     if (fract_ == ACurve::TimeZero())
         return;
-    
+
     auto idx = LeftPointIndexAtFraction(fract_);
     if (idx < 0)
         idx = 0;
 
     auto value_ = value;
     _ClampValue(value_);
-
-    
-
-    
 
     auto tf = EaseFunctorFactory::Create(_defaultTransitionType);
 
@@ -256,18 +252,19 @@ const FloatRange ACurve::TimeRangeForPoint(const size_t& idx)
 std::vector<float> ACurve::RawValues() const { return _pointValues; }
 std::vector<float> ACurve::RawPositions() const { return _pointPositions; }
 
- void ACurve::SetRawPoints(const std::vector<float>& pos, const std::vector<float>& v, std::vector<LockEdit> locks){
+void ACurve::SetRawPoints(const std::vector<float>& pos, const std::vector<float>& v, std::vector<LockEdit> locks)
+{
     _pointPositions = pos;
     _pointValues = v;
     _pointLock = locks;
-    
+
     _transitionToPoint.clear();
     _typenameOfTransitionToPoint.clear();
-    
+
     _transitionToPoint.resize(pos.size());
     _typenameOfTransitionToPoint.resize(pos.size());
- }
- 
+}
+
 std::vector<std::pair<float, float> > ACurve::RawPoints()
 {
     std::vector<std::pair<float, float> > ret;
@@ -408,6 +405,27 @@ MultiCurve::CurveColor MultiCurve::GetColor(const std::string& name)
 void MultiCurve::SetColor(const std::string& name, const CurveColor& c)
 {
     _colorForCurve[name] = c;
+}
+
+//
+float MultiCurve::GetMinTimeOffset()
+{
+    float mt = INFINITY;
+    for (auto& c : curves) {
+        if (c.second->TimeOffset() < mt)
+            mt = c.second->TimeOffset();
+    }
+    return mt;
+}
+
+float MultiCurve::GetMaxTimeScale()
+{
+    float ms = 0;
+    for (auto& c : curves) {
+        if (c.second->TimeScale() > ms)
+            ms = c.second->TimeScale();
+    }
+    return ms;
 }
 
 }; // namespace //
