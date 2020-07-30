@@ -67,7 +67,7 @@ void FVector::_ClampTime(float& t) const
 
 // ---
 
-void FVector::AddPoint(const float& fract)//, const float& value)
+void FVector::AddValue(const float& fract)//, const float& value)
 {
     // todo: change
     auto fract_ = fract;
@@ -88,7 +88,7 @@ void FVector::AddPoint(const float& fract)//, const float& value)
 
 //    auto tf = EaseFunctorFactory::Create(_defaultTransitionType);
 
-    printf("idx: %i (%lu)\n", idx, Size());
+//    printf("idx: %i (%lu)\n", idx, Size());
     if (!Size()) {
 
         _pointPositions.push_back(fract_);
@@ -107,7 +107,7 @@ void FVector::AddPoint(const float& fract)//, const float& value)
     }
 }
 
-void FVector::RemovePointAt(const size_t& idx)
+void FVector::RemoveValueAt(const size_t& idx)
 {
     if (idx == 0)
         return;
@@ -232,7 +232,7 @@ const int32_t FVector::RightPointIndexAtFraction(const float& f) const
 
 } // -1 for not found;
 
-const FloatRange FVector::TimeRangeForPoint(const size_t& idx)
+const FloatRange FVector::ValueRangeForPoint(const size_t& idx)
 {
     FloatRange ret;
 
@@ -259,7 +259,7 @@ const FloatRange FVector::TimeRangeForPoint(const size_t& idx)
 }
 
 //std::vector<float> FVector::RawValues() { return _pointValues; }
-std::vector<float> FVector::RawPositions() const { return _pointPositions; }
+std::vector<float> FVector::RawValues() const { return _pointPositions; }
 //std::vector<std::pair<float, float> > FVector::RawPoints()
 //{
 //    std::vector<std::pair<float, float> > ret;
@@ -272,10 +272,12 @@ std::vector<float> FVector::RawPositions() const { return _pointPositions; }
 //    return ret;
 //}
 
-const float FVector::TimeAt(const size_t& idx) const { return _pointPositions.at(idx); }
+const float FVector::ValueAt(const size_t& idx) const { return _pointPositions.at(idx); }
+
+
 //const float FVector::ValueAt(const size_t& idx) const { return _pointValues.at(idx); }
 
-//const LockEdit FVector::LockAt(const size_t& idx) const { return _pointLock.at(idx); }
+const bool FVector::LockAt(const size_t& idx) const { return _pointLock.at(idx); }
 
 
 // main:
@@ -325,7 +327,7 @@ const float FVector::TimeAt(const size_t& idx) const { return _pointPositions.at
 //    _pointValues[idx] = value;
 //}
 
-void FVector::SetTime(const size_t& idx, const float& t)
+void FVector::SetValue(const size_t& idx, const float& t)
 {
     if (_pointLock[idx] == true)
         return;
@@ -359,14 +361,14 @@ void FVector::SetTime(const size_t& idx, const float& t)
 //{
 //    SetValue(idx, _convertToNormalised(v));
 //}
-void FVector::SetScaledTime(const size_t& idx, const float& t)
+void FVector::SetScaledValue(const size_t& idx, const float& t)
 {
-    SetTime(idx, (_timeScale == 0) ? 0 : (t - _timeOffset) / _timeScale);
+    SetValue(idx, (_timeScale == 0) ? 0 : (t - _timeOffset) / _timeScale);
 }
 
-float FVector::ScaledTimeAt(const size_t& idx)
+float FVector::ScaledValueAt(const size_t& idx)
 {
-    return TimeAt(idx) * _timeScale + _timeOffset;
+    return ValueAt(idx) * _timeScale + _timeOffset;
 }
 
 //float FVector::ScaledValueAt(const size_t& idx)

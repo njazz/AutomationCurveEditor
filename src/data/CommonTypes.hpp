@@ -2,6 +2,7 @@
 #define COMMONTYPES_HPP
 
 #include <string>
+#include <functional>
 
 namespace AutomationCurve{
 
@@ -22,6 +23,8 @@ namespace Codec {
      std::string ToString(const CycleType& ct);
      bool FromString(CycleType& ct, const std::string& s);
 };
+
+using ConverterFn = std::function<float(const float&)>;
 
 }
 

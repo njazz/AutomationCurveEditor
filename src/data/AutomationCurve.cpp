@@ -80,7 +80,7 @@ void ACurve::AddPoint(const float& fract, const float& value)
 
     auto tf = EaseFunctorFactory::Create(_defaultTransitionType);
 
-    printf("idx: %i (%lu)\n", idx, Size());
+//    printf("idx: %i (%lu)\n", idx, Size());
     if (!Size()) {
 
         _pointPositions.push_back(fract_);
@@ -374,7 +374,7 @@ float ACurve::ScaledTimeAt(const size_t& idx)
 
 float ACurve::ScaledValueAt(const size_t& idx)
 {
-    return _convertFromNormalised(TimeAt(idx));
+    return _convertFromNormalised(ValueAt(idx));
 }
 
 void ACurve::SetValueConverters(const ConverterFn& converterFrom, const ConverterFn& converterTo)

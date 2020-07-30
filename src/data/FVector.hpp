@@ -42,7 +42,6 @@ using FVectorPtr = std::shared_ptr<FVector>;
 struct FVector {
 protected:
     std::vector<float> _pointPositions;
-    
     std::vector<bool> _pointLock;
     
     CycleType _cycleLeft = CycleType::Hold;
@@ -51,15 +50,19 @@ protected:
     float _timeOffset = 0;
     float _timeScale = 1;
     
+    ConverterFn _convertToNormalised = [](const float&f) { return f;};
+    ConverterFn _convertFromNormalised = [](const float&f) { return f;};
+    
+    
     void _ClampTime(float& t) const;
     
 //    friend struct Codec;
-    friend struct JSONCodec;
+//    friend struct JSONCodec;
     
     public:
     
-    void AddPoint(const float& fract);
-    void RemovePointAt(const size_t& idx);
+    void AddValue(const float& fract);
+    void RemoveValueAt(const size_t& idx);
     
     void Clear();
     
@@ -74,17 +77,19 @@ protected:
     const int32_t LeftPointIndexAtFraction(const float& f) const; // -1 for not found;
     const int32_t RightPointIndexAtFraction(const float& f) const; // -1 for not found;
 
-    const FloatRange TimeRangeForPoint(const size_t& idx);
+    const FloatRange ValueRangeForPoint(const size_t& idx);
     
-    std::vector<float> RawPositions() const;
+    std::vector<float> RawValues() const;
     
-    const float TimeAt(const size_t& idx) const;
+    void SetValue(const size_t& idx, const float& t);
+    
+    const float ValueAt(const size_t& idx) const;
     const bool LockAt(const size_t& idx) const;
     
-    void SetTime(const size_t& idx, const float& t);
+    void SetScaledValue(const size_t& idx, const float& t);
+    float ScaledValueAt(const size_t& idx);
     
-    void SetScaledTime(const size_t& idx, const float& t);
-    float ScaledTimeAt(const size_t& idx);
+    void SetValueConverters(const ConverterFn& convertToNormalized, const ConverterFn& convertFromNormalized);
     
     size_t Size() const;// { return _pointPositions.size(); }
 

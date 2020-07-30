@@ -15,7 +15,7 @@
 namespace AutomationCurve {
 
 using EaseFunctor = std::function<float(const float&)>; // input value is 0..1
-using ConverterFn = std::function<float(const float&)>;
+
 
 struct EaseFunctorFactory {
 private:
@@ -130,8 +130,6 @@ public:
     void SetTransitionToPoint(const size_t& idx, const std::string& f);
     void SetAllTransitions(const std::string& f);
 
-    std::string TransitionAt(const size_t& idx);
-
     const int32_t LeftPointIndexAtFraction(const float& f) const; // -1 for not found;
     const int32_t RightPointIndexAtFraction(const float& f) const; // -1 for not found;
 
@@ -155,8 +153,8 @@ public:
 
     const float TimeAt(const size_t& idx) const;
     const float ValueAt(const size_t& idx) const;
-
     const LockEdit LockAt(const size_t& idx) const;
+    std::string TransitionAt(const size_t& idx);
 
     float ValueAtFraction(const float& f) const;
 
@@ -176,7 +174,7 @@ public:
     float ScaledTimeAt(const size_t& idx);
     float ScaledValueAt(const size_t& idx);
     
-    void SetValueConverters(const ConverterFn& converterFrom, const ConverterFn& converterTo);
+    void SetValueConverters(const ConverterFn& convertToNormalized, const ConverterFn& convertFromNormalized);
 
     //
     static ACurvePtr CreatePtr() { return std::make_shared<ACurve>(); }
