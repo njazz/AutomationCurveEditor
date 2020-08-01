@@ -221,7 +221,7 @@ __MainPopupMenu(CurveEditor& editor)
 }
 
 static inline bool
-__Editorinteractions(ImGuiWindow* window, const ImRect& bb, const std::string& name, CurveEditor& editor, const float& range_x, const float& offset_x, const float& mult_x)
+__Editorinteractions(ImGuiWindow* window, const ImRect& bb, const std::string& name, CurveEditor& editor, const float& range_x, const float& offset_x, const float& mult_x, float timeOffset = 0, float timeScale = 1)
 {
     if (editor.curve == nullptr)
         return false;
@@ -245,7 +245,11 @@ __Editorinteractions(ImGuiWindow* window, const ImRect& bb, const std::string& n
         ImVec2 pos = (GetIO().MousePos - bb.Min) / (bb.Max - bb.Min);
         pos.y = 1 - pos.y;
         pos.x += 7. / widgetWidth;
+        
         auto fract = ((pos.x * range_x) + offset_x);
+        
+        fract = fract * timeScale;
+        fract -= timeOffset;
 
         auto l_idx = editor.curve->LeftPointIndexAtFraction(fract);
 
@@ -259,8 +263,12 @@ __Editorinteractions(ImGuiWindow* window, const ImRect& bb, const std::string& n
             p.y = 1 - p.y;
             p.x = (p.x - offset_x) * mult_x;
 
+            p.x += timeOffset;
+            p.x = p.x / timeScale;
+            
             p = p * (bb.Max - bb.Min) + bb.Min;
-
+            
+            
             ImVec2 a = p - ImVec2(7, 7);
             ImVec2 b = p + ImVec2(7, 7);
 
@@ -647,7 +655,7 @@ bool ImWidgetMulti(const std::string& name, const ImVec2& size, MultiCurve& mult
     if (multiCurve.HasActiveCurve()) {
         __MainPopupMenu(multiCurve.editor);
 
-        ret = __Editorinteractions(window, bb, name, multiCurve.editor, range_x, offset_x, mult_x);
+        ret = __Editorinteractions(window, bb, name, multiCurve.editor, range_x, offset_x, mult_x, multiCurve.editor.curve->TimeOffset() - multiCurve.GetMinTimeOffset(), multiCurve.GetMaxTimeScale()/multiCurve.editor.curve->TimeScale());
     } else {
         // empty menu
         if (BeginPopup("EmptyMenu")) {
@@ -664,10 +672,10 @@ bool ImWidgetMulti(const std::string& name, const ImVec2& size, MultiCurve& mult
         auto ec = multiCurve.GetColor(e.first);
         auto COLOR = IM_COL32(ec.r, ec.g, ec.b, 255);
 
-        __DrawSmoothCurve(window, bb, *e.second, COLOR, offset_x, mult_x, int(multiCurve.ActiveCurveName().compare(e.first) == 0) + 1);
+        __DrawSmoothCurve_Timed(window, bb, *e.second, COLOR, offset_x, mult_x, int(multiCurve.ActiveCurveName().compare(e.first) == 0) + 1, 256,multiCurve.GetMinTimeOffset(), multiCurve.GetMaxTimeScale() );
 
         if (multiCurve.ActiveCurveName().compare(e.first) == 0) {
-            __DrawEditorFeatures(window, bb, multiCurve.editor, COLOR, offset_x, mult_x);
+            __DrawEditorFeatures_Timed(window, bb, multiCurve.editor, COLOR, offset_x, mult_x,e.second->TimeOffset()- multiCurve.GetMinTimeOffset(), multiCurve.GetMaxTimeScale()/e.second->TimeScale() );
         }
     }
 
@@ -729,7 +737,9 @@ bool ImWidgetOverviewMulti(const std::string& name, const ImVec2& size, MultiCur
         auto ec = curve.GetColor(e.first);
         auto COLOR = IM_COL32(ec.r, ec.g, ec.b, 255);
 
-        __DrawSmoothCurve(window, bb, *e.second, COLOR, 0, 1, 2);
+        __DrawSmoothCurve_Timed(window, bb, *e.second, COLOR, 0, 1, 2, 256, curve.GetMinTimeOffset(), curve.GetMaxTimeScale());
+        
+//        __DrawSmoothCurve(window, bb, *e.second, COLOR, 0, 1, 2, 256);
 
         //if (editor.curve->activeCurve.compare(e.first)==0){
         //    __DrawEditorFeatures(window, bb, e.second, COLOR, offset_x, mult_x);

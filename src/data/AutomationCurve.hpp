@@ -63,6 +63,50 @@ enum class LockEdit {
     LockBoth
 };
 
+template <typename VAL>
+struct Optional final {
+protected:
+    VAL value;
+    bool null = true;
+
+    // ---
+public:
+    bool IsNull() const { return null; }
+
+    void SetNull() { null = true; }
+
+    void Set(const VAL& d)
+    {
+        value = d;
+        null = false;
+    }
+
+    const VAL& Get() const
+    {
+        if (!null)
+            return value;
+        else
+            throw("Optional value error.");
+    }
+    
+    VAL& GetRef() const
+    {
+        if (!null)
+            return value;
+        else
+            throw("Optional value error.");
+    }
+
+public:
+    Optional() {}
+    Optional(const VAL& v) { Set(v); }
+    Optional& operator=(const VAL& v)
+    {
+        Set(v);
+        return *this;
+    }
+};
+
 //struct Codec;
 //struct JSONCodec;
 
@@ -157,6 +201,7 @@ public:
     std::string TransitionAt(const size_t& idx);
 
     float ValueAtFraction(const float& f) const;
+    Optional<float> ValueAtScaledTime(const float& t) const;
 
     void SetValue(const size_t& idx, const float& v);
     void SetTime(const size_t& idx, const float& t);
@@ -165,8 +210,8 @@ public:
     void SetTimeOffset(const float f) { _timeOffset = f; }
     void SetTimeScale(const float& f) { _timeScale = f; }
     
-    const float TimeOffset() { return _timeOffset; }
-    const float TimeScale() { return _timeScale; }
+    const float TimeOffset() const { return _timeOffset; }
+    const float TimeScale() const { return _timeScale; }
     
     void SetScaledValue(const size_t& idx, const float& v);
     void SetScaledTime(const size_t& idx, const float& t);

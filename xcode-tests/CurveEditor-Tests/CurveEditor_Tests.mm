@@ -56,10 +56,45 @@
     
     XCTAssertEqual(ac.ScaledTimeAt(1), 5.0f);
     XCTAssertEqualWithAccuracy(ac.ScaledValueAt(1), 15.0f,0.0001f);
+    
+    // raw points
+    ac.SetRawPoints({.3,.5,.7}, {.1,.2,.3}, {AutomationCurve::LockEdit::LockX,AutomationCurve::LockEdit::LockY, AutomationCurve::LockEdit::None});
+    XCTAssertEqual(ac.RawPoints()[0].second,.1f);
+    XCTAssertEqual(ac.RawPoints()[1].second,.2f);
+    XCTAssertEqual(ac.RawPoints()[2].second,.3f);
+    
+    XCTAssertEqual(ac.RawPoints()[0].first,.3f);
+    XCTAssertEqual(ac.RawPoints()[1].first,.5f);
+    XCTAssertEqual(ac.RawPoints()[2].first,.7f);
+    
+    XCTAssertEqual(ac.RawPointLocks()[0],AutomationCurve::LockEdit::LockX);
+    XCTAssertEqual(ac.RawPointLocks()[1],AutomationCurve::LockEdit::LockY);
+    XCTAssertEqual(ac.RawPointLocks()[2],AutomationCurve::LockEdit::None);
+    
+    XCTAssertEqual(ac.RawValues()[0],.1f);
+    XCTAssertEqual(ac.RawValues()[1],.2f);
+    XCTAssertEqual(ac.RawValues()[2],.3f);
+    
+    XCTAssertEqual(ac.RawPositions()[0],.3f);
+    XCTAssertEqual(ac.RawPositions()[1],.5f);
+    XCTAssertEqual(ac.RawPositions()[2],.7f);
 }
 
 -(void) testMultiCurve {
     AutomationCurve::MultiCurve mc;
+    
+    mc.curves["A"] = AutomationCurve::ACurve::CreatePtr();
+    mc.curves["B"] = AutomationCurve::ACurve::CreatePtr();
+    
+    // time scaling
+    mc.curves["A"]->SetTimeOffset(10);
+    mc.curves["B"]->SetTimeOffset(4);
+    mc.curves["A"]->SetTimeScale(3);
+    mc.curves["B"]->SetTimeScale(2);
+    
+    XCTAssertEqual(mc.GetMinTimeOffset(), 4.0f);
+    XCTAssertEqual(mc.GetMaxTimeScale(),9.0f);
+    
 }
 
 -(void) testFVector {
@@ -79,6 +114,18 @@
     fv.SetPointLock(0, true);
     XCTAssertEqual(fv.LockAt(0), true);
     fv.SetPointLock(0,false);
+    
+    // sort
+    
+    fv.Clear();
+    fv.InsertValueAt(0, .9);
+    fv.InsertValueAt(0, .5);
+    fv.InsertValueAt(0, .1);
+    fv.Sort();
+    XCTAssertEqual(fv.ValueAt(0), .1f);
+    XCTAssertEqual(fv.ValueAt(1), .5f);
+    XCTAssertEqual(fv.ValueAt(2), .9f);
+    XCTAssertEqual(fv.Size(), 3);
     
 }
 

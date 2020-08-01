@@ -268,10 +268,11 @@ void ACurve::SetRawPoints(const std::vector<float>& pos, const std::vector<float
 std::vector<std::pair<float, float> > ACurve::RawPoints()
 {
     std::vector<std::pair<float, float> > ret;
+    ret.resize(_pointValues.size());
     for (int i = 0; i < _pointValues.size(); i++) {
         std::pair<float, float> p;
-        p.first = _pointValues[i];
-        p.second = _pointPositions[i];
+        p.second = _pointValues[i];
+        p.first = _pointPositions[i];
         ret[i] = p;
     }
     return ret;
@@ -311,6 +312,17 @@ float ACurve::ValueAtFraction(const float& f0) const
     float vRange = ValueAt(rp) - vOffset;
 
     return _transitionToPoint[rp](interp) * vRange + vOffset; //(interp<.5) ? ValueAt(lp) : ValueAt(rp);
+}
+
+//
+Optional<float> ACurve::ValueAtScaledTime(const float& t) const{
+    if (t<_timeOffset)
+        return Optional<float>();
+    if (t>(_timeOffset+_timeScale))
+        return Optional<float>();
+    
+    float s_t = (t-_timeOffset)/ ( (_timeScale) ? (_timeScale) : 0.000001 );
+    return Optional<float>(ValueAtFraction(s_t));
 }
 
 //
@@ -422,10 +434,10 @@ float MultiCurve::GetMaxTimeScale()
 {
     float ms = 0;
     for (auto& c : curves) {
-        if (c.second->TimeScale() > ms)
-            ms = c.second->TimeScale();
+        if ((c.second->TimeScale() + c.second->TimeOffset())> ms)
+            ms = c.second->TimeScale() + c.second->TimeOffset();
     }
-    return ms;
+    return ms - GetMinTimeOffset();
 }
 
 }; // namespace //
