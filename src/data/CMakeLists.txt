@@ -1,7 +1,6 @@
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
-set_property (GLOBAL PROPERTY SRC_AutomationCurve
-
+set(SRC
 ${CMAKE_CURRENT_SOURCE_DIR}/CommonTypes.cpp
 ${CMAKE_CURRENT_SOURCE_DIR}/CommonTypesCodec.cpp
 
@@ -21,9 +20,13 @@ ${CMAKE_CURRENT_SOURCE_DIR}/SequenceCodec.cpp
 ${CMAKE_CURRENT_SOURCE_DIR}/SequenceEditor.cpp
 )
 
-set_property (GLOBAL PROPERTY HEADERS_AutomationCurve
+set(HEADERS
 ${CMAKE_CURRENT_SOURCE_DIR}/CommonTypes.hpp
 ${CMAKE_CURRENT_SOURCE_DIR}/AutomationCurve.hpp
 ${CMAKE_CURRENT_SOURCE_DIR}/FVector.hpp
 ${CMAKE_CURRENT_SOURCE_DIR}/Sequence.hpp
 )
+
+if (NOT TARGET CurveEditorData)
+add_library (CurveEditorData ${SRC} ${HEADERS})
+endif()

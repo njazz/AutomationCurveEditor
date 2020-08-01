@@ -1,12 +1,10 @@
 
 #include "FVector.hpp"
 
-
-//#include "AutomationCurve.hpp"
-
 #include <algorithm>
 
 #include "math.h"
+#include <utility>
 
 namespace AutomationCurve {
 
@@ -67,6 +65,14 @@ void FVector::_ClampTime(float& t) const
 
 // ---
 
+void FVector::InsertValueAt(const size_t& idx, const float& fract){
+    // TODO
+    _pointPositions.insert(_pointPositions.begin() + idx , fract);
+        _pointLock.insert(_pointLock.begin() + idx , false);
+    
+    _unsorted = true;
+}
+
 void FVector::AddValue(const float& fract)//, const float& value)
 {
     // todo: change
@@ -109,10 +115,11 @@ void FVector::AddValue(const float& fract)//, const float& value)
 
 void FVector::RemoveValueAt(const size_t& idx)
 {
-    if (idx == 0)
-        return;
-    if (idx == (Size() - 1))
-        return;
+//    if (idx == 0)
+//        return;
+//    if (idx == (Size() - 1))
+//        return;
+
     _pointPositions.erase(_pointPositions.begin() + idx);
 //    _pointValues.erase(_pointValues.begin() + idx);
     _pointLock.erase(_pointLock.begin() + idx);
@@ -129,6 +136,35 @@ void FVector::Clear()
 //    _typenameOfTransitionToPoint.clear();
 
 //    _splineControlPoints.clear();
+}
+
+void FVector::Sort(){
+    //std::sort (_pointPositions.begin(), myvector.begin()+4);
+    
+    std::vector<std::pair<float, size_t>> indexed;
+    
+    for (int i=0;i<_pointPositions.size();i++){
+        indexed.push_back(std::pair<float, size_t>(_pointPositions[i],i));
+    }
+    
+    std::sort(indexed.begin(), indexed.end(), [](const std::pair<float, size_t>& a, const std::pair<float, size_t>& b) -> bool{ return a.first > b.first; });
+    
+    decltype(_pointPositions) _swap_positions;
+    decltype(_pointLock) _swap_lock;
+    
+    
+    _swap_positions.resize(_pointPositions.size());
+    _swap_lock.resize(_pointLock.size());
+    
+    for (const auto& e: indexed){
+        _swap_positions.push_back(e.first);
+        _swap_lock.push_back(_pointLock[e.second]);
+    }
+    
+    _pointPositions = _swap_positions;
+    _pointLock = _swap_lock;
+    
+    _unsorted = false;
 }
 
 //void FVector::InitConstant(const float& c)
@@ -329,6 +365,7 @@ const bool FVector::LockAt(const size_t& idx) const { return _pointLock.at(idx);
 
 void FVector::SetValue(const size_t& idx, const float& t)
 {
+    if (idx>= Size()) return;
     if (_pointLock[idx] == true)
         return;
 //    if (_pointLock[idx] == LockEdit::LockBoth)
@@ -343,16 +380,23 @@ void FVector::SetValue(const size_t& idx, const float& t)
 //    if (value == FVector::TimeZero())
 //        return;
 
-    auto idx2 = idx + 1;
-    if (idx2 < Size())
-        if (t >= _pointPositions[idx2])
-            return;
-
-    if (idx > 0)
-        if (t < _pointPositions[idx - 1])
-            return;
+    if (idx>=Size())
+        return;
+    
+//    auto idx2 = idx + 1;
+//    if (idx2 < Size())
+//        if (t >= _pointPositions[idx2])
+//            return;
+//
+//    if (idx > 0)
+//        if (t < _pointPositions[idx - 1])
+//            return;
 
     _pointPositions[idx] = value;
+}
+
+void FVector::SetSortedValue(const float& t){
+    
 }
 
 // ---

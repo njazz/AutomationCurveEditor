@@ -53,18 +53,27 @@ protected:
     ConverterFn _convertToNormalised = [](const float&f) { return f;};
     ConverterFn _convertFromNormalised = [](const float&f) { return f;};
     
-    
     void _ClampTime(float& t) const;
     
 //    friend struct Codec;
 //    friend struct JSONCodec;
+
+    bool _unsorted = false;     // is set when unsorted methods are called; reset on "Sort()"
     
     public:
     
-    void AddValue(const float& fract);
+    void InsertValueAt(const size_t& idx, const float& fract);   // unsorted
+    void AddValue(const float& fract);                          // sorted
     void RemoveValueAt(const size_t& idx);
     
+    void SetValue(const size_t& idx, const float& t);
+    void SetSortedValue(const float& t);
+    
+    void Sort();
+    
     void Clear();
+    
+    bool IsSorted() { return _unsorted; }
     
     void SetCycleLeft(const CycleType& v);
     void SetCycleRight(const CycleType& v);
@@ -81,7 +90,7 @@ protected:
     
     std::vector<float> RawValues() const;
     
-    void SetValue(const size_t& idx, const float& t);
+
     
     const float ValueAt(const size_t& idx) const;
     const bool LockAt(const size_t& idx) const;

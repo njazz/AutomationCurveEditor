@@ -16,6 +16,10 @@
 #include <GLFW/glfw3.h>
 
 #include "AutomationCurveWidget.hpp"
+#include "ColorSequenceWidget.hpp"
+#include "FVectorWidget.hpp"
+#include "SequenceWidget.hpp"
+#include "TimelineWidget.hpp"
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1900) && !defined(IMGUI_DISABLE_WIN32_FUNCTIONS)
 #pragma comment(lib, "legacy_stdio_definitions")
@@ -78,6 +82,8 @@ int main(int, char**)
     c1->AddPoint(.5, .75);
 
     AutomationCurve::MultiCurve mc;
+    
+    AutomationCurve::FVector vec1;
 
     mc.curves["One"] = c1;
     auto c2 = AutomationCurve::ACurve::CreatePtr();
@@ -89,6 +95,15 @@ int main(int, char**)
     mc.SetColor("Two", AutomationCurve::MultiCurve::CurveColor(0, 64, 255));
     
     AutomationCurve::CurveEditor editor(c1);
+    
+    AutomationCurve::MultiCurve colorCurves;
+    colorCurves.curves["R"] = AutomationCurve::ACurve::CreatePtr();
+    colorCurves.curves["G"] = AutomationCurve::ACurve::CreatePtr();
+    colorCurves.curves["B"] = AutomationCurve::ACurve::CreatePtr();
+    
+    colorCurves.curves["R"]->AddPoint(.33, .9);
+    colorCurves.curves["G"]->AddPoint(.33, .8);
+    colorCurves.curves["B"]->AddPoint(.33, .7);
 
     // Main loop
     while (!glfwWindowShouldClose(window)) {
@@ -100,8 +115,7 @@ int main(int, char**)
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        //
-
+        // single
         ImGui::Begin("Widget");
 
         ImGui::SetNextItemWidth(150);
@@ -117,8 +131,7 @@ int main(int, char**)
 
         ImGui::End();
 
-        //
-
+        // multi
         ImGui::Begin("Multi");
 
         AutomationCurve::ImWidgetOverviewMulti("Test widget Overview", ImVec2(800, 96), mc, &scroll, &zoom);
@@ -146,11 +159,22 @@ int main(int, char**)
         }
         ImGui::End();
         
+        // list
         ImGui::Begin("List");
         if (mc.ActiveCurve() != nullptr){
             AutomationCurve::ImWidgetListView("Test list", mc.editor);
 
         }
+        ImGui::End();
+        
+        // colors
+        ImGui::Begin("ColorSeq");
+        AutomationCurve::ImWidgetColorSeq("Colors", colorCurves);
+        ImGui::End();
+        
+        // fvec
+        ImGui::Begin("FVec Bars");
+        AutomationCurve::ImWidgetBars("bars", vec1);
         ImGui::End();
 
         // Rendering

@@ -1,3 +1,6 @@
+#ifndef AUTOMATION_CURVE_WIDGET_HPP
+#define AUTOMATION_CURVE_WIDGET_HPP
+
 #include "imgui.h"
 #include "AutomationCurve.hpp"
 
@@ -10,8 +13,8 @@ struct AutomationViewSettingsCommon{
     float selectionStart = 0;   // fraction
     float selectionEnd = 1;
     
-    ImVec2 size;
-    ImVec2 viewRange;
+    ImVec2 size = ImVec2(400,300);
+    ImVec2 viewRange = ImVec2(0,1);
 };
 
 struct AutomationViewSettings : public  AutomationViewSettingsCommon{
@@ -41,3 +44,5 @@ namespace AutomationCurve{
     bool ImWidgetMulti(const std::string& name, MultiCurve& curve, const AutomationMultiViewSettings& =AutomationMultiViewSettings());
     
 };
+
+#endif
