@@ -50,6 +50,8 @@ protected:
     float _timeOffset = 0;
     float _timeScale = 1;
     
+    size_t _selected = (size_t) -1;
+    
     ConverterFn _convertToNormalised = [](const float&f) { return f;};
     ConverterFn _convertFromNormalised = [](const float&f) { return f;};
     
@@ -73,7 +75,15 @@ protected:
     
     void Clear();
     
+    size_t Find(const float& v, const float& eps = 0.001f);
+    
     bool IsSorted() { return _unsorted; }
+    
+    void Select(size_t& idx) { _selected = idx;};
+    size_t Selected() { return _selected;}
+    void Deselect(){ _selected = (size_t) -1;}
+    bool IsSelected(){ return _selected != (size_t)-1;}
+    
     
     void SetCycleLeft(const CycleType& v);
     void SetCycleRight(const CycleType& v);

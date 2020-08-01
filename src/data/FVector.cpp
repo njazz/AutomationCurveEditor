@@ -138,6 +138,13 @@ void FVector::Clear()
 //    _splineControlPoints.clear();
 }
 
+size_t FVector::Find(const float& v, const float& eps){
+    for (int i=0;i<Size();i++)
+        if ( (ValueAt(i) >= (v-eps)) && (ValueAt(i) < (v+eps)) )
+            return i;
+    return (size_t) -1;
+}
+
 void FVector::Sort(){
     //std::sort (_pointPositions.begin(), myvector.begin()+4);
     
@@ -147,14 +154,14 @@ void FVector::Sort(){
         indexed.push_back(std::pair<float, size_t>(_pointPositions[i],i));
     }
     
-    std::sort(indexed.begin(), indexed.end(), [](const std::pair<float, size_t>& a, const std::pair<float, size_t>& b) -> bool{ return a.first > b.first; });
+    std::sort(indexed.begin(), indexed.end(), [](const std::pair<float, size_t>& a, const std::pair<float, size_t>& b) -> bool{ return a.first < b.first; });
     
     decltype(_pointPositions) _swap_positions;
     decltype(_pointLock) _swap_lock;
     
     
-    _swap_positions.resize(_pointPositions.size());
-    _swap_lock.resize(_pointLock.size());
+    _swap_positions.reserve(_pointPositions.size());
+    _swap_lock.reserve(_pointLock.size());
     
     for (const auto& e: indexed){
         _swap_positions.push_back(e.first);

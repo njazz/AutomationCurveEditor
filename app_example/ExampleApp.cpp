@@ -84,6 +84,7 @@ int main(int, char**)
     AutomationCurve::MultiCurve mc;
     
     AutomationCurve::FVector vec1;
+    AutomationCurve::FVector vec2;
 
     mc.curves["One"] = c1;
     auto c2 = AutomationCurve::ACurve::CreatePtr();
@@ -175,6 +176,11 @@ int main(int, char**)
         // fvec
         ImGui::Begin("FVec Bars");
         AutomationCurve::ImWidgetBars("bars", vec1);
+        ImGui::End();
+        ImGui::Begin("FVec Slices");
+        AutomationCurve::ImWidgetSlices("slices", vec2);
+        ImGui::Separator();
+        AutomationCurve::ImWidgetBars("slices-2", vec2);
         ImGui::End();
 
         // Rendering
