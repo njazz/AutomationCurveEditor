@@ -26,7 +26,7 @@ bool ImWidgetBars(const std::string& name, FVector& vec, const BarsViewSettings&
     if (hovered) {
         SetHoveredID(id);
     }
-    
+
     //
 
     RenderFrame(bb.Min, bb.Max, GetColorU32(ImGuiCol_FrameBg, 1), true, style.FrameRounding);
@@ -87,10 +87,6 @@ bool ImWidgetBars(const std::string& name, FVector& vec, const BarsViewSettings&
     }
 
     float hoverValue = 1. - float(((GetIO().MousePos.y - bb.Min.y) / (bb.Max.y - bb.Min.y)));
-
-    
-
-    
 
     // new bar
     float w2 = settings.size.x / (vec.Size() + 1.0f);
@@ -169,97 +165,93 @@ bool ImWidgetSlices(const std::string& name, FVector& vec, const SlicesViewSetti
 
     RenderFrame(bb.Min, bb.Max, GetColorU32(ImGuiCol_FrameBg, 1), true, style.FrameRounding);
     PushClipRect(bb.Min, bb.Max, false);
-    
+
     // draw
     auto lineColor = IM_COL32(208, 192, 160, 255);
-    
-    for (int i=0;i<=vec.Size();i++){
-        float a = (i==0)?0:vec.ValueAt(i-1);
-        float b = (i==(vec.Size())) ? 1 : vec.ValueAt(i);
-        
+
+    for (int i = 0; i <= vec.Size(); i++) {
+        float a = (i == 0) ? 0 : vec.ValueAt(i - 1);
+        float b = (i == (vec.Size())) ? 1 : vec.ValueAt(i);
+
         a *= settings.size.x;
         b *= settings.size.x;
-        
-//        window->DrawList->AddRectFilled(bb.Min + ImVec2(a, 0), bb.Min + ImVec2(a, settings.size.y), fillColor_);
+
+        //        window->DrawList->AddRectFilled(bb.Min + ImVec2(a, 0), bb.Min + ImVec2(a, settings.size.y), fillColor_);
         window->DrawList->AddRect(bb.Min + ImVec2(a, 0), bb.Min + ImVec2(b, settings.size.y), lineColor);
     }
-    
+
     // hover
-//    const ImGuiID id = window->GetID(name.c_str());
-    
-//    if (hovered) {
-//        SetHoveredID(id);
-//    }
-    
-     float x = GetMousePos().x;
-    
-     ImVec2 pos = (GetIO().MousePos - bb.Min) / (bb.Max - bb.Min);
-    
-    float addValue = pos.x;//(x-GetWindowPos().x)/(bb.Max.x - bb.Min.x);
-    
+    //    const ImGuiID id = window->GetID(name.c_str());
+
+    //    if (hovered) {
+    //        SetHoveredID(id);
+    //    }
+
+    float x = GetMousePos().x;
+
+    ImVec2 pos = (GetIO().MousePos - bb.Min) / (bb.Max - bb.Min);
+
+    float addValue = pos.x; //(x-GetWindowPos().x)/(bb.Max.x - bb.Min.x);
+
     // mouse - move x
     auto foundIdx = vec.Find(addValue, 0.05);
     auto b = foundIdx < vec.Size();
-    
-        if (IsMouseClicked(ImGuiMouseButton_Left)){
+
+    if (IsMouseClicked(ImGuiMouseButton_Left)) {
         if (b)
             vec.Select(foundIdx);
         else
             vec.Deselect();
     }
-    
-    if (vec.IsSelected()){
+
+    if (vec.IsSelected()) {
         float a = vec.ValueAt(vec.Selected()) * (bb.Max.x - bb.Min.x);
-        window->DrawList->AddRectFilled(bb.Min + ImVec2(a-2, 1), bb.Min + ImVec2(a+3, settings.size.y-3), lineColor);
+        window->DrawList->AddRectFilled(bb.Min + ImVec2(a - 2, 1), bb.Min + ImVec2(a + 3, settings.size.y - 3), lineColor);
         // removed
         // vec.Sort();
-        if (IsMouseReleased(ImGuiMouseButton_Left)){
-        vec.Sort();
-        vec.Deselect();
+        if (IsMouseReleased(ImGuiMouseButton_Left)) {
+            vec.Sort();
+            vec.Deselect();
         }
     }
-    
-    if (b){
+
+    if (b) {
         float a = vec.ValueAt(foundIdx) * (bb.Max.x - bb.Min.x);
-        window->DrawList->AddRectFilled(bb.Min + ImVec2(a-2, 1), bb.Min + ImVec2(a+1, settings.size.y-1), lineColor);
+        window->DrawList->AddRectFilled(bb.Min + ImVec2(a - 2, 1), bb.Min + ImVec2(a + 1, settings.size.y - 1), lineColor);
     }
 
-
-    
-    if ( (vec.IsSelected()) && (hovered) && GetIO().KeyMods ==0 &&(IsMouseDragging(ImGuiMouseButton_Left))){
-        auto newVal =  vec.ValueAt(vec.Selected()) + 1*GetMouseDragDelta().x / (bb.Max.x - bb.Min.x);
-        if (newVal<0.0001)
+    if ((vec.IsSelected()) && (hovered) && GetIO().KeyMods == 0 && (IsMouseDragging(ImGuiMouseButton_Left))) {
+        auto newVal = vec.ValueAt(vec.Selected()) + 1 * GetMouseDragDelta().x / (bb.Max.x - bb.Min.x);
+        if (newVal < 0.0001)
             newVal = 0.0001;
-        if (newVal >= 1-0.0001)
-            newVal = 1-0.0001;
+        if (newVal >= 1 - 0.0001)
+            newVal = 1 - 0.0001;
         vec.SetValue(vec.Selected(), newVal);
         ResetMouseDragDelta();
     }
-    
+
     // add with shift
-    if  ( (hovered) && (GetIO().KeyMods & ImGuiKeyModFlags_Shift) ){
-       
-        
-        window->DrawList->AddLine(ImVec2(x,bb.Min.y), ImVec2(x,bb.Max.y), IM_COL32_WHITE,2);
+    if ((hovered) && (GetIO().KeyMods & ImGuiKeyModFlags_Shift)) {
+
+        window->DrawList->AddLine(ImVec2(x, bb.Min.y), ImVec2(x, bb.Max.y), IM_COL32_WHITE, 2);
         SetCursorPos(bb.Min - GetWindowPos());
-                Text("add : %f", addValue);
-        if (IsMouseClicked(ImGuiMouseButton_Left)){
+        Text("add : %f", addValue);
+        if (IsMouseClicked(ImGuiMouseButton_Left)) {
             vec.AddValue(addValue);
         }
     }
 
     // remove with alt
-    if  ( (hovered) && (GetIO().KeyMods & ImGuiKeyModFlags_Alt) ){
-        if (b)
-        {
+    if ((hovered) && (GetIO().KeyMods & ImGuiKeyModFlags_Alt)) {
+        if (b) {
             SetCursorPos(bb.Min - GetWindowPos());
-                Text("remove : %lu", foundIdx);
+            Text("remove : %lu", foundIdx);
             vec.Deselect();
-            if ( IsMouseClicked(ImGuiMouseButton_Left))
-            vec.RemoveValueAt(foundIdx);
+            if (IsMouseClicked(ImGuiMouseButton_Left))
+                vec.RemoveValueAt(foundIdx);
         }
     }
-    
+
     PopClipRect();
 
     return false;
@@ -270,4 +262,4 @@ bool ImWidgetSlices(const std::string& name, FVector& vec, const SlicesViewSetti
 bool ImWidgetBars(const std::string& name, ACurve& vec, const BarsViewSettings& settings) { return false; }
 bool ImWidgetSlices(const std::string& name, ACurve& vec, const SlicesViewSettings& settings) { return false; }
 };
-     ;
+    

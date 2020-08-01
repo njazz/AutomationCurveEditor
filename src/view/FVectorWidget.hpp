@@ -13,6 +13,13 @@ struct BarsViewSettings : public FVectorViewSettingsCommon {
 };
 
 struct SlicesViewSettings : public FVectorViewSettingsCommon {
+    enum class NamesPosition{
+        None,
+        Top,
+        Bottom
+    };
+    
+    NamesPosition namePosition;
 };
 
 // ---

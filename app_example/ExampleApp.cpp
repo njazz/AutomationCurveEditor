@@ -105,6 +105,11 @@ int main(int, char**)
     colorCurves.curves["R"]->AddPoint(.33, .9);
     colorCurves.curves["G"]->AddPoint(.33, .8);
     colorCurves.curves["B"]->AddPoint(.33, .7);
+    
+    float meterValue[3];
+    meterValue[0] = .1;
+    meterValue[1] = .2;
+    meterValue[2] = .3;
 
     // Main loop
     while (!glfwWindowShouldClose(window)) {
@@ -177,11 +182,29 @@ int main(int, char**)
         ImGui::Begin("FVec Bars");
         AutomationCurve::ImWidgetBars("bars", vec1);
         ImGui::End();
+        
         ImGui::Begin("FVec Slices");
         AutomationCurve::ImWidgetSlices("slices", vec2);
         ImGui::Separator();
-        AutomationCurve::ImWidgetBars("slices-2", vec2);
+//        AutomationCurve::ImWidgetBars("slices-2", vec2);
         ImGui::End();
+        
+        ImGui::Begin("Seq Item");
+        ImGui::End();
+        
+        ImGui::Begin("Seq Track");
+        ImGui::End();
+        
+        ImGui::Begin("Seq");
+        ImGui::End();
+        
+        ImGui::Begin("Meter");
+        AutomationCurve::ImWidgetMeter(std::vector<float>(meterValue,meterValue+3));
+        ImGui::SliderFloat("value1", meterValue,0,1);
+        ImGui::SliderFloat("value2", meterValue+1,0,1);
+        ImGui::SliderFloat("value3", meterValue+2,0,1);
+        ImGui::End();
+        
 
         // Rendering
         ImGui::Render();

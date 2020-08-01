@@ -3,8 +3,8 @@
 - Test widget bool output
 - Test value range conversion
 
-- float vec widget: vertical bars
-- float vec widget: horizontal split
++ float vec widget: vertical bars
++ float vec widget: horizontal split
 - sequencer track widget
 - sequencer multitrack widget
 - timeline widget
@@ -21,3 +21,4 @@
 - clipping rect
 
 - single widget mouse actions
+- fix shift action
