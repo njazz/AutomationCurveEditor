@@ -162,6 +162,18 @@ int main(int, char**)
                 col2.b = col[2]*255;
                 mc.SetColor(e.first, col2);
             }
+            auto f1 = e.second->TimeScale();
+            auto f2 = e.second->TimeOffset();
+            
+            if (ImGui::InputFloat(("timescale##"+std::to_string((intptr_t)&e)).c_str(), &f1))
+            {
+                e.second->SetTimeScale(f1);
+            }
+            
+            if (ImGui::InputFloat(("timeoffset##"+std::to_string((intptr_t)&e)).c_str(), &f2))
+            {
+                e.second->SetTimeOffset(f2);
+            }
         }
         ImGui::End();
         

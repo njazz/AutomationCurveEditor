@@ -29,7 +29,7 @@ namespace AutomationCurve {
 bool ImWidgetBars(const std::string& name, FVector& vec, const BarsViewSettings& settings = BarsViewSettings());
 bool ImWidgetSlices(const std::string& name, FVector& vec, const SlicesViewSettings& settings = SlicesViewSettings());
 
-// draw curve values. replace time or equal
+// draw curve values. replace time or equal spaced
 
 bool ImWidgetBars(const std::string& name, ACurve& vec, const BarsViewSettings& settings = BarsViewSettings());
 bool ImWidgetSlices(const std::string& name, ACurve& vec, const SlicesViewSettings& settings = SlicesViewSettings());

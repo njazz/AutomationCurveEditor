@@ -31,7 +31,7 @@ bool ImWidgetBars(const std::string& name, FVector& vec, const BarsViewSettings&
 
     RenderFrame(bb.Min, bb.Max, GetColorU32(ImGuiCol_FrameBg, 1), true, style.FrameRounding);
     PushClipRect(bb.Min, bb.Max, false);
-
+//    BeginChild("test_id");
     //
 
     float w = settings.size.x / vec.Size();
@@ -136,7 +136,7 @@ bool ImWidgetBars(const std::string& name, FVector& vec, const BarsViewSettings&
             }
         }
     }
-
+//    EndChild();
     PopClipRect();
 
     return false;

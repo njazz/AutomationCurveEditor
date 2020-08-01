@@ -43,6 +43,12 @@ namespace AutomationCurve{
     bool ImWidget(const std::string& name, CurveEditor& curve, const AutomationViewSettings& =AutomationViewSettings());
     bool ImWidgetMulti(const std::string& name, MultiCurve& curve, const AutomationMultiViewSettings& =AutomationMultiViewSettings());
     
+    bool ImWidgetOverview(const std::string& name, CurveEditor& curve, const AutomationViewSettings& =AutomationViewSettings());
+    bool ImWidgetOverviewMulti(const std::string& name, MultiCurve& curve, const AutomationMultiViewSettings& =AutomationMultiViewSettings());
+    
+    bool ImWidgetListView(const std::string& name, CurveEditor& curve);
+    bool ImWidgetListViewMulti(const std::string& name, MultiCurve& curve);
+    
 };
 
 #endif

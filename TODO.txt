@@ -8,6 +8,7 @@
 - sequencer track widget
 - sequencer multitrack widget
 - timeline widget
++ meter widget
 
 - list view bool out
 - list r/o view
