@@ -7,6 +7,8 @@ struct FVectorViewSettingsCommon {
     ImVec2 viewRange = ImVec2(0,1);
 
     bool replacePointTime; // for ACurve
+    
+    bool autoSort = true;
 };
 
 struct BarsViewSettings : public FVectorViewSettingsCommon {

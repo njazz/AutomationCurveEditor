@@ -1,5 +1,5 @@
-- Add time offset/scale in overview widgets
-- Add tests
++ Add time offset/scale in overview widgets
++ Add tests
 - Test widget bool output
 - Test value range conversion
 
@@ -22,4 +22,4 @@
 - clipping rect
 
 - single widget mouse actions
-- fix shift action
++ fix shift action

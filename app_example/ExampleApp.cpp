@@ -210,7 +210,9 @@ int main(int, char**)
         ImGui::Begin("FVec Slices");
         AutomationCurve::ImWidgetSlices("slices", vec2);
         ImGui::Separator();
-//        AutomationCurve::ImWidgetBars("slices-2", vec2);
+        AutomationCurve::ImWidgetBars("slices-2", vec2);
+        ImGui::Separator();
+        ImGui::Text("-");
         ImGui::End();
         
         ImGui::Begin("Seq Item");

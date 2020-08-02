@@ -90,7 +90,7 @@ bool ImWidgetBars(const std::string& name, FVector& vec, const BarsViewSettings&
 
     // new bar
     float w2 = settings.size.x / (vec.Size() + 1.0f);
-    if (GetIO().KeyMods & ImGuiKeyModFlags_Shift) {
+    if (GetIO().KeyMods & ImGuiKeyModFlags_Shift && hovered) {
         for (int i = 0; i < (vec.Size() + 1); i++) {
             float h = settings.size.y * (hoverValue);
 
@@ -138,6 +138,8 @@ bool ImWidgetBars(const std::string& name, FVector& vec, const BarsViewSettings&
     }
 //    EndChild();
     PopClipRect();
+    
+    SetCursorPos(bb.Max-GetWindowPos()+ImVec2(0,5));
 
     return false;
 }
@@ -204,13 +206,14 @@ bool ImWidgetSlices(const std::string& name, FVector& vec, const SlicesViewSetti
             vec.Deselect();
     }
 
-    if (vec.IsSelected()) {
+    if (vec.IsSelected() && hovered) {
         float a = vec.ValueAt(vec.Selected()) * (bb.Max.x - bb.Min.x);
         window->DrawList->AddRectFilled(bb.Min + ImVec2(a - 2, 1), bb.Min + ImVec2(a + 3, settings.size.y - 3), lineColor);
         // removed
         // vec.Sort();
         if (IsMouseReleased(ImGuiMouseButton_Left)) {
-            vec.Sort();
+            if (settings.autoSort)
+                vec.Sort();
             vec.Deselect();
         }
     }
@@ -238,7 +241,12 @@ bool ImWidgetSlices(const std::string& name, FVector& vec, const SlicesViewSetti
         Text("add : %f", addValue);
         if (IsMouseClicked(ImGuiMouseButton_Left)) {
             vec.AddValue(addValue);
+            
+            if (settings.autoSort)
+                vec.Sort();
         }
+        
+        
     }
 
     // remove with alt
@@ -253,6 +261,8 @@ bool ImWidgetSlices(const std::string& name, FVector& vec, const SlicesViewSetti
     }
 
     PopClipRect();
+    
+    SetCursorPos(bb.Max-GetWindowPos()+ImVec2(0,5));
 
     return false;
 }
