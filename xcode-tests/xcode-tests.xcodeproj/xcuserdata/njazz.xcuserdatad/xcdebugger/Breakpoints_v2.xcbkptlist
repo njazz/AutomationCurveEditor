@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "CurveEditor-Tests/CurveEditor_Tests.mm"
-            timestampString = "617994550.999496"
+            timestampString = "618053261.087919"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "55"
-            endingLineNumber = "55"
+            startingLineNumber = "57"
+            endingLineNumber = "57"
             landmarkName = "-testAutomationCurve"
             landmarkType = "7">
          </BreakpointContent>

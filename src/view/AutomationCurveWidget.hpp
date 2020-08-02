@@ -49,6 +49,8 @@ namespace AutomationCurve{
     bool ImWidgetListView(const std::string& name, CurveEditor& curve);
     bool ImWidgetListViewMulti(const std::string& name, MultiCurve& curve);
     
+
+    
 };
 
 #endif

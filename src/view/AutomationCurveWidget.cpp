@@ -221,7 +221,7 @@ __MainPopupMenu(CurveEditor& editor)
 }
 
 static inline bool
-__Editorinteractions(ImGuiWindow* window, const ImRect& bb, const std::string& name, CurveEditor& editor, const float& range_x, const float& offset_x, const float& mult_x, float timeOffset = 0, float timeScale = 1)
+__Editorinteractions(ImGuiWindow* window, const ImRect& bb, const std::string& name, CurveEditor& editor, const float& range_x, const float& offset_x, const float& mult_x, float timeOffset = 0, float timeScale = 1, float timeScaleSingle = 1)
 {
     if (editor.curve == nullptr)
         return false;
@@ -248,16 +248,19 @@ __Editorinteractions(ImGuiWindow* window, const ImRect& bb, const std::string& n
         
         auto fract = ((pos.x * range_x) + offset_x);
         
+//        fract -= timeOffset / timeScaleSingle;
+        
         fract = fract * timeScale;
-        fract -= timeOffset;
+        fract -= timeOffset* timeScaleSingle;
 
         auto l_idx = editor.curve->LeftPointIndexAtFraction(fract);
+        
+        fract += timeOffset* timeScaleSingle;
 
         if (l_idx >= 0) {
             ImVec2 p;
 
             p.x = editor.curve->RawPositions()[l_idx];
-            //        p.x = fract;
             p.y = editor.curve->RawValues()[l_idx];
 
             p.y = 1 - p.y;
@@ -312,6 +315,7 @@ __Editorinteractions(ImGuiWindow* window, const ImRect& bb, const std::string& n
         ImVec2 dpos = GetMouseDragDelta() / (bb.Max - bb.Min);
         dpos.y *= -1;
         dpos.x *= range_x;
+        dpos.x /= timeScale;
 
         editor.MoveSelectionTime(dpos.x);
         editor.MoveSelectionValue(dpos.y);
@@ -645,6 +649,14 @@ bool ImWidgetMulti(const std::string& name, const ImVec2& size, MultiCurve& mult
     const float offset_x = viewRange.x;
     const float range_x = viewRange.y - viewRange.x;
     const float mult_x = (range_x > .0001) ? 1.0 / range_x : 0.0001;
+    
+    // converter
+    AutomationCurve::WidgetCoordinateConverter coordConverter;
+    coordConverter.widgetWidth = size.x;
+    coordConverter.scrollOffset = viewRange.x;
+    coordConverter.zoomValue = viewRange.y - viewRange.x;
+    coordConverter.timeOffset = multiCurve.GetMinTimeOffset();
+    coordConverter.timeScale = multiCurve.GetMaxTimeScale();
 
     RenderFrame(bb.Min, bb.Max, GetColorU32(ImGuiCol_FrameBg, 1), true, style.FrameRounding);
 
@@ -655,7 +667,7 @@ bool ImWidgetMulti(const std::string& name, const ImVec2& size, MultiCurve& mult
     if (multiCurve.HasActiveCurve()) {
         __MainPopupMenu(multiCurve.editor);
 
-        ret = __Editorinteractions(window, bb, name, multiCurve.editor, range_x, offset_x, mult_x, multiCurve.editor.curve->TimeOffset() - multiCurve.GetMinTimeOffset(), multiCurve.GetMaxTimeScale()/multiCurve.editor.curve->TimeScale());
+        ret = __Editorinteractions(window, bb, name, multiCurve.editor, range_x, offset_x, mult_x, multiCurve.editor.curve->TimeOffset() - multiCurve.GetMinTimeOffset(), multiCurve.GetMaxTimeScale()/multiCurve.editor.curve->TimeScale(), multiCurve.editor.curve->TimeScale());
     } else {
         // empty menu
         if (BeginPopup("EmptyMenu")) {
@@ -675,7 +687,7 @@ bool ImWidgetMulti(const std::string& name, const ImVec2& size, MultiCurve& mult
         __DrawSmoothCurve_Timed(window, bb, *e.second, COLOR, offset_x, mult_x, int(multiCurve.ActiveCurveName().compare(e.first) == 0) + 1, 256,multiCurve.GetMinTimeOffset(), multiCurve.GetMaxTimeScale() );
 
         if (multiCurve.ActiveCurveName().compare(e.first) == 0) {
-            __DrawEditorFeatures_Timed(window, bb, multiCurve.editor, COLOR, offset_x, mult_x,e.second->TimeOffset()- multiCurve.GetMinTimeOffset(), multiCurve.GetMaxTimeScale()/e.second->TimeScale() );
+            __DrawEditorFeatures_Timed(window, bb, multiCurve.editor, COLOR, offset_x, mult_x,e.second->TimeOffset()- multiCurve.GetMinTimeOffset(), multiCurve.GetMaxTimeScale()/e.second->TimeScale(), e.second->TimeScale() );
         }
     }
 
@@ -830,6 +842,10 @@ bool ImWidgetOverviewMulti(const std::string& name, const ImVec2& size, MultiCur
 
     return ret;
 }
+
+// ---
+
+        
 
 };
 

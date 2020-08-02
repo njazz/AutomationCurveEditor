@@ -80,7 +80,7 @@ void ACurve::AddPoint(const float& fract, const float& value)
 
     auto tf = EaseFunctorFactory::Create(_defaultTransitionType);
 
-//    printf("idx: %i (%lu)\n", idx, Size());
+    //    printf("idx: %i (%lu)\n", idx, Size());
     if (!Size()) {
 
         _pointPositions.push_back(fract_);
@@ -315,13 +315,14 @@ float ACurve::ValueAtFraction(const float& f0) const
 }
 
 //
-Optional<float> ACurve::ValueAtScaledTime(const float& t) const{
-    if (t<_timeOffset)
+Optional<float> ACurve::ValueAtScaledTime(const float& t) const
+{
+    if (t < _timeOffset)
         return Optional<float>();
-    if (t>(_timeOffset+_timeScale))
+    if (t > (_timeOffset + _timeScale))
         return Optional<float>();
-    
-    float s_t = (t-_timeOffset)/ ( (_timeScale) ? (_timeScale) : 0.000001 );
+
+    float s_t = (t - _timeOffset) / ((_timeScale) ? (_timeScale) : 0.000001);
     return Optional<float>(ValueAtFraction(s_t));
 }
 
@@ -434,10 +435,62 @@ float MultiCurve::GetMaxTimeScale()
 {
     float ms = 0;
     for (auto& c : curves) {
-        if ((c.second->TimeScale() + c.second->TimeOffset())> ms)
+        if ((c.second->TimeScale() + c.second->TimeOffset()) > ms)
             ms = c.second->TimeScale() + c.second->TimeOffset();
     }
     return ms - GetMinTimeOffset();
+}
+
+// ---
+float WidgetCoordinateConverter::FractionCurveToGlobal(const float& f){
+    auto t = curveTimeOffset + f * curveTimeScale;
+    auto ret = t / (timeScale - timeOffset);
+    printf("%f %f\n",t,ret);
+    return ret;
+}
+float WidgetCoordinateConverter::FractionGlobalToCurve(const float& f){
+    auto t = f  * (timeScale - timeOffset);
+     auto ret =  (t- curveTimeOffset) / curveTimeScale ;
+     printf("%f %f\n",t,ret);
+    return ret;
+    
+}
+
+// ---
+
+float WidgetCoordinateConverter::PixelToCurveFraction(const float& px)
+{
+    auto glF = px / widgetWidth;
+    return FractionGlobalToCurve(glF);
+}
+
+float WidgetCoordinateConverter::PixelToSeconds(const float& px)
+{
+
+    return px / widgetWidth * WidthInSeconds() + timeOffset;
+}
+
+float WidgetCoordinateConverter::SecondsToPixel(const float& sec)
+{
+    return (sec-timeOffset) / WidthInSeconds() * widgetWidth;
+}
+
+float WidgetCoordinateConverter::SecondsToCurveFraction(const float& sec)
+{
+    auto glF = (sec  ) / timeScale - timeOffset;
+    return FractionGlobalToCurve(glF);
+}
+
+float WidgetCoordinateConverter::CurveFractionToSeconds(const float& fr)
+{
+    auto glF = FractionCurveToGlobal(fr);
+    return (glF+timeOffset) * timeScale;
+}
+
+float WidgetCoordinateConverter::CurveFractionToPixel(const float& fr)
+{
+    auto glF = FractionCurveToGlobal(fr);
+    return glF * widgetWidth;
 }
 
 }; // namespace //

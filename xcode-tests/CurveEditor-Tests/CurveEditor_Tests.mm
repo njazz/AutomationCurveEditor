@@ -12,6 +12,8 @@
 #include "FVector.hpp"
 #include "Sequence.hpp"
 
+//#include "AutomationCurveWidget.hpp"
+
 @interface CurveEditor_Tests : XCTestCase
 
 @end
@@ -78,6 +80,34 @@
     XCTAssertEqual(ac.RawPositions()[0],.3f);
     XCTAssertEqual(ac.RawPositions()[1],.5f);
     XCTAssertEqual(ac.RawPositions()[2],.7f);
+}
+
+-(void) testPixelConverters{
+    AutomationCurve::WidgetCoordinateConverter conv;
+    
+    conv.widgetWidth = 500;
+    
+    // 1..4
+    conv.timeOffset = 1;
+    conv.timeScale = 3;
+    
+    // 1.5..3.5
+    conv.curveTimeOffset = 1.5;
+    conv.curveTimeScale = 2;
+    
+    float temp = 0;
+    temp = conv.FractionCurveToGlobal(0.5f);
+    XCTAssertEqual(.5f,conv.FractionGlobalToCurve(temp));
+    
+    temp = conv.PixelToCurveFraction(100.0f);
+    XCTAssertEqualWithAccuracy(100.0f,conv.CurveFractionToPixel(temp),0.001);
+    
+    temp = conv.SecondsToPixel(1.0f);
+    XCTAssertEqual(1.0f,conv.PixelToSeconds(temp));
+    
+    temp = conv.CurveFractionToSeconds(.25f);
+    XCTAssertEqual(.25f,conv.SecondsToCurveFraction(temp));
+    
 }
 
 -(void) testMultiCurve {

@@ -14,6 +14,6 @@ void __DrawSmoothCurve(ImGuiWindow* window, const ImRect& bb, ACurve& curve, con
 void __DrawEditorFeatures(ImGuiWindow* window, const ImRect& bb, CurveEditor& editor, const ImU32& color, const float& offset_x, const float& mult_x);
 
 void __DrawSmoothCurve_Timed(ImGuiWindow* window, const ImRect& bb, ACurve& curve, const ImU32& color, const float& offset_x , const float& mult_x , int lineWidth , int nPoints , float timeOffset, float timeScale);
-void __DrawEditorFeatures_Timed(ImGuiWindow* window, const ImRect& bb, CurveEditor& editor, const ImU32& color, const float& offset_x, const float& mult_x, float timeOffset, float timeScale);
+void __DrawEditorFeatures_Timed(ImGuiWindow* window, const ImRect& bb, CurveEditor& editor, const ImU32& color, const float& offset_x, const float& mult_x, float timeOffset, float timeScale, float timeScaleSingle);
 
 }

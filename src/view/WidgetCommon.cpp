@@ -144,7 +144,7 @@ void __DrawEditorFeatures(ImGuiWindow* window, const ImRect& bb, CurveEditor& ed
     }
 }
 
-void __DrawEditorFeatures_Timed(ImGuiWindow* window, const ImRect& bb, CurveEditor& editor, const ImU32& color, const float& offset_x, const float& mult_x, float timeOffset, float timeScale)
+void __DrawEditorFeatures_Timed(ImGuiWindow* window, const ImRect& bb, CurveEditor& editor, const ImU32& color, const float& offset_x, const float& mult_x, float timeOffset, float timeScale, float timeScaleSingle)
 {
     using namespace ImGui;
 
@@ -194,14 +194,14 @@ void __DrawEditorFeatures_Timed(ImGuiWindow* window, const ImRect& bb, CurveEdit
         ImVec2 p;
         p.x = editor.curve->RawPositions()[i];
         p.y = editor.curve->RawValues()[i];
-
+        
+        p.x += timeOffset / timeScaleSingle;
+        p.x = p.x / timeScale;
+        //p.x += timeOffset / timeScale ;
+        
         p.y = 1 - p.y;
         p.x = (p.x - offset_x) * mult_x;
         
-        p.x += timeOffset;
-        
-        p.x = p.x / timeScale;
-
         p = p * (bb.Max - bb.Min) + bb.Min;
 
         ImVec2 a = p - ImVec2(4, 4);

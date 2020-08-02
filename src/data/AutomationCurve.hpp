@@ -349,6 +349,37 @@ public:
 
 // ---
 
+    struct WidgetCoordinateConverter{
+        float widgetWidth = 400;
+        
+        float timeOffset = 0;
+        float timeScale = 1;
+        
+        float curveTimeOffset = 0;
+        float curveTimeScale = 1;
+        
+        float scrollOffset = 0;
+        float zoomValue = 1;
+        
+        inline float WidthInSeconds() { return timeOffset + timeScale; }
+        
+        
+        //
+        float FractionCurveToGlobal(const float& f);
+        float FractionGlobalToCurve(const float& f);
+        
+        float PixelToCurveFraction(const float& px);
+        float PixelToSeconds(const float& px);
+        
+        float SecondsToPixel(const float& sec);
+        float SecondsToCurveFraction(const float& sec);
+        
+        float CurveFractionToSeconds(const float& fr);
+        float CurveFractionToPixel(const float& fr);
+    };
+
+// ---
+
 namespace Codec {
 //    static std::string ToString(const CycleType& ct);
      std::string ToString(const CurveValueRange& ct);
