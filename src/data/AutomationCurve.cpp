@@ -444,14 +444,14 @@ float MultiCurve::GetMaxTimeScale()
 // ---
 float WidgetCoordinateConverter::FractionCurveToGlobal(const float& f) const{
     auto t = curveTimeOffset + f * curveTimeScale;
-    auto ret = t / (timeScale - timeOffset);
-    printf("%f %f\n",t,ret);
+    auto ret = (t-timeOffset) / (timeScale );
+//    printf("%f %f\n",t,ret);
     return ret;
 }
 float WidgetCoordinateConverter::FractionGlobalToCurve(const float& f) const{
-    auto t = f  * (timeScale - timeOffset);
+    auto t = f  * timeScale + timeOffset;
      auto ret =  (t- curveTimeOffset) / curveTimeScale ;
-     printf("%f %f\n",t,ret);
+//     printf("%f %f\n",t,ret);
     return ret;
     
 }
@@ -481,14 +481,14 @@ float WidgetCoordinateConverter::SecondsToPixel(const float& sec) const
 
 float WidgetCoordinateConverter::SecondsToCurveFraction(const float& sec) const
 {
-    auto glF = (sec  ) / timeScale - timeOffset;
+    auto glF = (sec  - timeOffset) / timeScale ;
     return FractionGlobalToCurve(glF);
 }
 
 float WidgetCoordinateConverter::CurveFractionToSeconds(const float& fr) const
 {
     auto glF = FractionCurveToGlobal(fr);
-    return (glF+timeOffset) * timeScale;
+    return (glF) * timeScale+timeOffset;
 }
 
 float WidgetCoordinateConverter::CurveFractionToPixel(const float& fr) const

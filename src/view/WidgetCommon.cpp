@@ -270,6 +270,7 @@ void __DrawSmoothCurve_2(ImGuiWindow* window, const ImRect& bb, ACurve& curve, c
     for (int i = 0; i <= (settings.nPoints - 1); ++i) {
         float px = (i + 0) / float(settings.nPoints);
         float qx = (i + 1) / float(settings.nPoints);
+        
         float py = 1 - curve.ValueAtFraction(px);
         float qy = 1 - curve.ValueAtFraction(qx);
 
