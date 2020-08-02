@@ -442,13 +442,13 @@ float MultiCurve::GetMaxTimeScale()
 }
 
 // ---
-float WidgetCoordinateConverter::FractionCurveToGlobal(const float& f){
+float WidgetCoordinateConverter::FractionCurveToGlobal(const float& f) const{
     auto t = curveTimeOffset + f * curveTimeScale;
     auto ret = t / (timeScale - timeOffset);
     printf("%f %f\n",t,ret);
     return ret;
 }
-float WidgetCoordinateConverter::FractionGlobalToCurve(const float& f){
+float WidgetCoordinateConverter::FractionGlobalToCurve(const float& f) const{
     auto t = f  * (timeScale - timeOffset);
      auto ret =  (t- curveTimeOffset) / curveTimeScale ;
      printf("%f %f\n",t,ret);
@@ -458,38 +458,43 @@ float WidgetCoordinateConverter::FractionGlobalToCurve(const float& f){
 
 // ---
 
-float WidgetCoordinateConverter::PixelToCurveFraction(const float& px)
+float WidgetCoordinateConverter::PixelToCurveFraction(const float& px) const
 {
-    auto glF = px / widgetWidth;
-    return FractionGlobalToCurve(glF);
+    auto glF =  px / widgetWidth;
+    auto glFzoom = glF * zoomValue + scrollOffset;
+    return FractionGlobalToCurve(glFzoom);
 }
 
-float WidgetCoordinateConverter::PixelToSeconds(const float& px)
+float WidgetCoordinateConverter::PixelToSeconds(const float& px) const
 {
-
-    return px / widgetWidth * WidthInSeconds() + timeOffset;
+    auto glF =  px / widgetWidth;
+    auto glFzoom = glF * zoomValue + scrollOffset;
+    return glFzoom * WidthInSeconds() + timeOffset;
 }
 
-float WidgetCoordinateConverter::SecondsToPixel(const float& sec)
+float WidgetCoordinateConverter::SecondsToPixel(const float& sec) const
 {
-    return (sec-timeOffset) / WidthInSeconds() * widgetWidth;
+    auto glFzoom = (sec-timeOffset) / WidthInSeconds();
+    auto glF = (glFzoom - scrollOffset) /zoomValue;
+    return glF * widgetWidth;
 }
 
-float WidgetCoordinateConverter::SecondsToCurveFraction(const float& sec)
+float WidgetCoordinateConverter::SecondsToCurveFraction(const float& sec) const
 {
     auto glF = (sec  ) / timeScale - timeOffset;
     return FractionGlobalToCurve(glF);
 }
 
-float WidgetCoordinateConverter::CurveFractionToSeconds(const float& fr)
+float WidgetCoordinateConverter::CurveFractionToSeconds(const float& fr) const
 {
     auto glF = FractionCurveToGlobal(fr);
     return (glF+timeOffset) * timeScale;
 }
 
-float WidgetCoordinateConverter::CurveFractionToPixel(const float& fr)
+float WidgetCoordinateConverter::CurveFractionToPixel(const float& fr) const
 {
-    auto glF = FractionCurveToGlobal(fr);
+    auto glFzoom = FractionCurveToGlobal(fr);
+    auto glF = (glFzoom - scrollOffset) /zoomValue;
     return glF * widgetWidth;
 }
 

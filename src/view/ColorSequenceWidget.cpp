@@ -7,6 +7,7 @@
 using namespace ImGui;
 
 namespace AutomationCurve {
+
 bool ImWidgetColorSeq(const std::string& name, MultiCurve& curve, const ColorSeqViewSettings& settings)
 {
     // TODO:

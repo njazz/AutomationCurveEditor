@@ -95,6 +95,9 @@
     conv.curveTimeOffset = 1.5;
     conv.curveTimeScale = 2;
     
+    conv.zoomValue = .5;
+    conv.scrollOffset = .25;
+    
     float temp = 0;
     temp = conv.FractionCurveToGlobal(0.5f);
     XCTAssertEqual(.5f,conv.FractionGlobalToCurve(temp));

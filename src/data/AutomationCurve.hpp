@@ -16,7 +16,6 @@ namespace AutomationCurve {
 
 using EaseFunctor = std::function<float(const float&)>; // input value is 0..1
 
-
 struct EaseFunctorFactory {
 private:
     static const std::map<std::string, EaseFunctor> _map;
@@ -48,8 +47,6 @@ struct SplineControlPoints {
 //
 //    void operator()(float&, const float&) {}
 //};
-
-
 
 enum class CurveValueRange {
     Positive, // 0..1 for parameters
@@ -88,7 +85,7 @@ public:
         else
             throw("Optional value error.");
     }
-    
+
     VAL& GetRef() const
     {
         if (!null)
@@ -127,28 +124,28 @@ protected:
 
     std::string _defaultTransitionType = "Linear";
 
-//    CycleType _cycleType = CycleType::Hold;
+    //    CycleType _cycleType = CycleType::Hold;
 
     CycleType _cycleLeft = CycleType::Hold;
     CycleType _cycleRight = CycleType::Hold;
-    
-    static constexpr float TimeZero() { return -1; } ;
-    
+
+    static constexpr float TimeZero() { return -1; };
+
     CurveValueRange _valueRange = CurveValueRange::Positive;
-    
-    ConverterFn _convertToNormalised = [](const float&f) { return f;};
-    ConverterFn _convertFromNormalised = [](const float&f) { return f;};
-    
+
+    ConverterFn _convertToNormalised = [](const float& f) { return f; };
+    ConverterFn _convertFromNormalised = [](const float& f) { return f; };
+
     float _timeOffset = 0;
     float _timeScale = 1;
 
     // ---
 
-    void _ClampTime(float& t) const;  // may return ACurve::TimeZero() in "zero" cycle mode
+    void _ClampTime(float& t) const; // may return ACurve::TimeZero() in "zero" cycle mode
     void _ClampValue(float& t) const;
 
-//    friend struct Codec;
-//    friend struct JSONCodec;
+    //    friend struct Codec;
+    //    friend struct JSONCodec;
     // ---
 public:
     ACurve() { InitConstant(0); }
@@ -162,13 +159,13 @@ public:
     void InitTF(); // -1..1
 
     size_t Size() const;
-    
+
     void SetCycleLeft(const CycleType& v);
     void SetCycleRight(const CycleType& v);
-    
-    inline CycleType CycleLeft() const { return _cycleLeft;}
-    inline CycleType CycleRight() const { return _cycleRight;}
-    
+
+    inline CycleType CycleLeft() const { return _cycleLeft; }
+    inline CycleType CycleRight() const { return _cycleRight; }
+
     void SetPointLock(const size_t& idx, const LockEdit& l);
 
     void SetTransitionToPoint(const size_t& idx, const std::string& f);
@@ -186,14 +183,14 @@ public:
     std::vector<float> RawPositions() const;
     std::vector<EaseFunctor> RawTransitions() const { return _transitionToPoint; };
     std::vector<std::string> RawTransitionTypenames() const { return _typenameOfTransitionToPoint; };
-    std::vector<LockEdit> RawPointLocks() const { return _pointLock;}
+    std::vector<LockEdit> RawPointLocks() const { return _pointLock; }
     CurveValueRange RawValueRange() const { return _valueRange; }
-    
+
     // for deserialization
     void SetRawPoints(const std::vector<float>& pos, const std::vector<float>& v, std::vector<LockEdit> locks);
     void SetRawValueRange(const CurveValueRange& vr) { _valueRange = vr; }
-    
-    std::vector<std::pair<float, float> > RawPoints();  // -> GetRawPoints
+
+    std::vector<std::pair<float, float> > RawPoints(); // -> GetRawPoints
 
     const float TimeAt(const size_t& idx) const;
     const float ValueAt(const size_t& idx) const;
@@ -205,20 +202,20 @@ public:
 
     void SetValue(const size_t& idx, const float& v);
     void SetTime(const size_t& idx, const float& t);
-    
+
     // scaled
     void SetTimeOffset(const float f) { _timeOffset = f; }
     void SetTimeScale(const float& f) { _timeScale = f; }
-    
+
     const float TimeOffset() const { return _timeOffset; }
     const float TimeScale() const { return _timeScale; }
-    
+
     void SetScaledValue(const size_t& idx, const float& v);
     void SetScaledTime(const size_t& idx, const float& t);
-    
+
     float ScaledTimeAt(const size_t& idx);
     float ScaledValueAt(const size_t& idx);
-    
+
     void SetValueConverters(const ConverterFn& convertToNormalized, const ConverterFn& convertFromNormalized);
 
     //
@@ -341,7 +338,7 @@ public:
 
     CurveColor GetColor(const std::string& name);
     void SetColor(const std::string& name, const CurveColor& c);
-    
+
     //
     float GetMinTimeOffset();
     float GetMaxTimeScale();
@@ -349,45 +346,43 @@ public:
 
 // ---
 
-    struct WidgetCoordinateConverter{
-        float widgetWidth = 400;
-        
-        float timeOffset = 0;
-        float timeScale = 1;
-        
-        float curveTimeOffset = 0;
-        float curveTimeScale = 1;
-        
-        float scrollOffset = 0;
-        float zoomValue = 1;
-        
-        inline float WidthInSeconds() { return timeOffset + timeScale; }
-        
-        
-        //
-        float FractionCurveToGlobal(const float& f);
-        float FractionGlobalToCurve(const float& f);
-        
-        float PixelToCurveFraction(const float& px);
-        float PixelToSeconds(const float& px);
-        
-        float SecondsToPixel(const float& sec);
-        float SecondsToCurveFraction(const float& sec);
-        
-        float CurveFractionToSeconds(const float& fr);
-        float CurveFractionToPixel(const float& fr);
-    };
+struct WidgetCoordinateConverter {
+    float widgetWidth = 400;
+
+    float timeOffset = 0;
+    float timeScale = 1;
+
+    float curveTimeOffset = 0;
+    float curveTimeScale = 1;
+
+    float scrollOffset = 0;
+    float zoomValue = 1;
+
+    inline float WidthInSeconds() const { return timeOffset + timeScale; }
+
+    //
+    float FractionCurveToGlobal(const float& f) const;
+    float FractionGlobalToCurve(const float& f) const;
+
+    float PixelToCurveFraction(const float& px) const;
+    float PixelToSeconds(const float& px) const;
+
+    float SecondsToPixel(const float& sec) const;
+    float SecondsToCurveFraction(const float& sec) const;
+
+    float CurveFractionToSeconds(const float& fr) const;
+    float CurveFractionToPixel(const float& fr) const;
+};
 
 // ---
 
 namespace Codec {
-//    static std::string ToString(const CycleType& ct);
-     std::string ToString(const CurveValueRange& ct);
-     std::string ToString(const LockEdit& ct);
+    
+    std::string ToString(const CurveValueRange& ct);
+    std::string ToString(const LockEdit& ct);
 
-//    static bool FromString(CycleType& ct, const std::string& s);
-     bool FromString(CurveValueRange& ct, const std::string& s);
-     bool FromString(LockEdit& ct, const std::string& s);
+    bool FromString(CurveValueRange& ct, const std::string& s);
+    bool FromString(LockEdit& ct, const std::string& s);
 
     // mc color - json (impl)
     // mc json

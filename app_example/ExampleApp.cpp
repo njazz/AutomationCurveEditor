@@ -145,6 +145,25 @@ int main(int, char**)
 
         ImGui::End();
         
+        ImGui::Begin("Multi2");
+        
+        AutomationCurve::AutomationMultiViewSettings settings;
+        settings.size = ImVec2(800, 480);
+
+
+        AutomationCurve::ImWidgetOverviewMulti("Test widget Overview 2", ImVec2(800, 96), mc, &scroll, &zoom);
+        settings.scroll = scroll;
+        settings.zoom = zoom;
+        
+       
+
+//    settings.viewRange.x = scroll * (1 - zoom);
+//    settings.viewRange.y = settings.viewRange.x + (zoom);
+    
+        AutomationCurve::ImWidgetMulti("Multi 2",  mc, settings);
+
+        ImGui::End();
+        
         ImGui::Begin("Select");
         for (auto& e: mc.curves){
             if (ImGui::Button(e.first.c_str()))
