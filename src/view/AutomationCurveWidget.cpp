@@ -27,9 +27,7 @@ __Editorinteractions_2(ImGuiWindow* window, const ImRect& bb, const std::string&
     using namespace ImGui;
 
     const bool hovered = IsItemHovered();
-    ; //IsMouseHoveringRect(bb.Min, bb.Max);
     const ImGuiID id = window->GetID(name.c_str());
-    const float widgetWidth = bb.Max.x - bb.Min.x;
 
     if (hovered) {
         SetHoveredID(id);
@@ -40,7 +38,6 @@ __Editorinteractions_2(ImGuiWindow* window, const ImRect& bb, const std::string&
     if (hovered) {
 
         // find selected control point
-
         ImVec2 pos = (GetIO().MousePos - bb.Min); // / (bb.Max - bb.Min);
 
         pos.y /= (bb.Max.y - bb.Min.y);
@@ -49,18 +46,8 @@ __Editorinteractions_2(ImGuiWindow* window, const ImRect& bb, const std::string&
 
         auto curveFract = converter.PixelToCurveFraction(pos.x);
         auto curveFract2 = converter.PixelToCurveFraction(pos.x - 7);
-        auto fract = converter.FractionCurveToGlobal(curveFract);
-
-        //        auto fract = ((pos.x * range_x) + offset_x);
-
-        //        fract -= timeOffset / timeScaleSingle;
-
-        //        fract = fract * timeScale;
-        //        fract -= timeOffset* timeScaleSingle;
 
         auto l_idx = editor.curve->LeftPointIndexAtFraction(curveFract);
-
-        //        fract += timeOffset* timeScaleSingle;
 
         if (l_idx >= 0) {
             ImVec2 p;
@@ -75,13 +62,6 @@ __Editorinteractions_2(ImGuiWindow* window, const ImRect& bb, const std::string&
 
             p.y = p.y * (bb.Max.y - bb.Min.y) + bb.Min.y;
             p.x += bb.Min.x;
-
-            //            p.x = (p.x - offset_x) * mult_x;
-
-            //            p.x += timeOffset;
-            //            p.x = p.x / timeScale;
-
-            //            p = p * (bb.Max - bb.Min) + bb.Min;
 
             ImVec2 a = p - ImVec2(7, 7);
             ImVec2 b = p + ImVec2(7, 7);
@@ -123,19 +103,17 @@ __Editorinteractions_2(ImGuiWindow* window, const ImRect& bb, const std::string&
         }
 
         // move
-        auto rawDelta = GetMouseDragDelta();
         ImVec2 dpos = GetMouseDragDelta() / (bb.Max - bb.Min);
         dpos.y *= -1;
         // ?
-        //        dpos.x *= range_x;
-        //        dpos.x /= timeScale;
-
-        dpos.x = converter.PixelToCurveFraction(rawDelta.x);
+        dpos.x *= settings.zoom;
+    
         editor.MoveSelectionTime(dpos.x);
         editor.MoveSelectionValue(dpos.y);
 
         ResetMouseDragDelta();
         ret = true;
+        
         //    // add point lines crosshair
         if (GetIO().KeyMods & ImGuiKeyModFlags_Shift) {
             window->DrawList->AddLine(
@@ -659,7 +637,7 @@ bool ImWidgetMulti(const std::string& name, MultiCurve& multiCurve, const Automa
 
     RenderFrame(bb.Min, bb.Max, GetColorU32(ImGuiCol_FrameBg, 1), true, style.FrameRounding);
     PushClipRect(bb.Min, bb.Max, false);
-    __DrawGrid_2(window, bb, settings);
+    
 
     // converter
     AutomationCurve::WidgetCoordinateConverter coordConverter;
@@ -669,7 +647,13 @@ bool ImWidgetMulti(const std::string& name, MultiCurve& multiCurve, const Automa
     coordConverter.zoomValue = settings.zoom; //viewRange.y - settings.viewRange.x;
     coordConverter.timeOffset = multiCurve.GetMinTimeOffset();
     coordConverter.timeScale = multiCurve.GetMaxTimeScale();
-
+    
+    //temp
+    coordConverter.curveTimeOffset = coordConverter.timeOffset;
+    coordConverter.curveTimeScale = coordConverter.timeScale;
+    
+    __DrawGrid_2(window, bb, settings, coordConverter);
+    
     if (multiCurve.HasActiveCurve()) {
         __MainPopupMenu(multiCurve.editor);
         
@@ -696,6 +680,8 @@ bool ImWidgetMulti(const std::string& name, MultiCurve& multiCurve, const Automa
         // TODO
         coordConverter.curveTimeOffset = e.second->TimeOffset();
         coordConverter.curveTimeScale = e.second->TimeScale();
+        
+        
 
         __DrawSmoothCurve_2(window, bb, *e.second, COLOR, settings, coordConverter);
 

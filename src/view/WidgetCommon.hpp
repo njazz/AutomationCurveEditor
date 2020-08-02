@@ -22,7 +22,7 @@ void __DrawSmoothCurve_Timed(ImGuiWindow* window, const ImRect& bb, ACurve& curv
 void __DrawEditorFeatures_Timed(ImGuiWindow* window, const ImRect& bb, CurveEditor& editor, const ImU32& color, const float& offset_x, const float& mult_x, float timeOffset, float timeScale, float timeScaleSingle);
 
 // NEW
-void __DrawGrid_2(ImGuiWindow* window, const ImRect& bb, const AutomationViewSettingsCommon& settings);
+void __DrawGrid_2(ImGuiWindow* window, const ImRect& bb, const AutomationViewSettingsCommon& settings, const WidgetCoordinateConverter& converter);
 void __DrawSmoothCurve_2(ImGuiWindow* window, const ImRect& bb, ACurve& curve, const ImU32& color, const AutomationViewSettingsCommon& settings,const WidgetCoordinateConverter& converter);
 void __DrawEditorFeatures_2(ImGuiWindow* window, const ImRect& bb, CurveEditor& editor, const ImU32& color, const AutomationViewSettingsCommon& settings, const WidgetCoordinateConverter& converter);
 

@@ -20,6 +20,8 @@ struct AutomationViewSettingsCommon {
     float scroll = 0;
     float zoom = 1;
     
+    unsigned char gridSteps = 10;
+    
     unsigned char lineWidth = 1;
     unsigned char selectedLineWidth = 2;
     unsigned int nPoints = 256;

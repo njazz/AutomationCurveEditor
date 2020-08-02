@@ -219,15 +219,15 @@ void __DrawEditorFeatures_Timed(ImGuiWindow* window, const ImRect& bb, CurveEdit
     }
 }
 
-// ---
+// ------------------------------------------------------------------------------------------------------------------------------------
 // NEW
-void __DrawGrid_2(ImGuiWindow* window, const ImRect& bb, const AutomationViewSettingsCommon& settings)
+
+void __DrawGrid_2(ImGuiWindow* window, const ImRect& bb, const AutomationViewSettingsCommon& settings, const WidgetCoordinateConverter& converter)
 {
 
     using namespace ImGui;
-
+    
     float ht = bb.Max.y - bb.Min.y;
-    float wd = bb.Max.x - bb.Min.x;
 
     window->DrawList->AddLine(
         ImVec2(bb.Min.x, bb.Min.y + ht / 2),
@@ -243,29 +243,20 @@ void __DrawGrid_2(ImGuiWindow* window, const ImRect& bb, const AutomationViewSet
         ImVec2(bb.Min.x, bb.Min.y + ht / 4 * 3),
         ImVec2(bb.Max.x, bb.Min.y + ht / 4 * 3),
         GetColorU32(ImGuiCol_TextDisabled));
-
-    const int numsteps = 10;
-    float steps = (numsteps * (settings.scroll + settings.zoom));
-
-    for (int i = 1; i < ceil(steps); i++) {
-        auto w2 = float(wd / (steps));
-        //        auto w2c = float(wd/ceil(steps));
-        auto off2 = -fmodf(settings.scroll, 1.0f / (numsteps)) * wd * settings.zoom; //-fmodf((offset_x)*wd,(wd/11));
+    
+    for (int i=0;i<settings.gridSteps;i++){
+        auto x = converter.CurveFractionToPixel(i/float(settings.gridSteps));
         window->DrawList->AddLine(
-            ImVec2(bb.Min.x + w2 * (i) + off2, bb.Min.y),
-            ImVec2(bb.Min.x + w2 * (i) + off2, bb.Max.y),
+            ImVec2(bb.Min.x + x, bb.Min.y),
+            ImVec2(bb.Min.x + x, bb.Max.y),
             GetColorU32(ImGuiCol_TextDisabled));
     }
+
 }
 
 void __DrawSmoothCurve_2(ImGuiWindow* window, const ImRect& bb, ACurve& curve, const ImU32& color, const AutomationViewSettingsCommon& settings, const WidgetCoordinateConverter& converter)
 {
     using namespace ImGui;
-
-    auto offset_x = settings.scroll;
-    //        auto mult_x = settings.zoom;
-
-    const float mult_x = (settings.zoom > .0001) ? 1.0 / settings.zoom : 0.0001;
 
     for (int i = 0; i <= (settings.nPoints - 1); ++i) {
         float px = (i + 0) / float(settings.nPoints);
@@ -282,13 +273,17 @@ void __DrawSmoothCurve_2(ImGuiWindow* window, const ImRect& bb, ACurve& curve, c
 
         auto o_py = curve.ValueAtScaledTime(s_px);
         auto o_qy = curve.ValueAtScaledTime(s_qx);
+        
+        auto n_px = converter.CurveFractionToPixel(c_px) + bb.Min.x;
+        auto n_qx = converter.CurveFractionToPixel(c_qx) + bb.Min.x;
+        
 
         if (!o_py.IsNull() && !o_qy.IsNull()) {
             py = 1 - o_py.Get();
             qy = 1 - o_qy.Get();
 
-            ImVec2 p((px - offset_x) * (bb.Max.x - bb.Min.x) * mult_x + bb.Min.x, py * (bb.Max.y - bb.Min.y) + bb.Min.y);
-            ImVec2 q((qx - offset_x) * (bb.Max.x - bb.Min.x) * mult_x + bb.Min.x, qy * (bb.Max.y - bb.Min.y) + bb.Min.y);
+            ImVec2 p(n_px, py * (bb.Max.y - bb.Min.y) + bb.Min.y);
+            ImVec2 q(n_qx, qy * (bb.Max.y - bb.Min.y) + bb.Min.y);
 
             window->DrawList->AddLine(p, q, color, settings.selectedLineWidth);
         }
@@ -341,22 +336,13 @@ void __DrawEditorFeatures_2(ImGuiWindow* window, const ImRect& bb, CurveEditor& 
         p.x = editor.curve->RawPositions()[i];
         p.y = editor.curve->RawValues()[i];
 
-        //        p.x += timeOffset / timeScaleSingle;
-        //        p.x = p.x / timeScale;
-        //p.x += timeOffset / timeScale ;
-
         p.x = converter.CurveFractionToPixel(p.x) + bb.Min.x;
 
         p.y = 1 - p.y;
         p.y = p.y * (bb.Max.y - bb.Min.y) + bb.Min.y;
 
-        //        p.x = (p.x - offset_x) * mult_x;
-        //        p = p * (bb.Max - bb.Min) + bb.Min;
-
         ImVec2 a = p - ImVec2(4, 4);
         ImVec2 b = p + ImVec2(4, 4);
-
-        //            auto idx = editor.curve->LeftPointIndexAtFraction(p.x);
 
         //
         if (editor.IsSelected(i)) {
@@ -368,4 +354,5 @@ void __DrawEditorFeatures_2(ImGuiWindow* window, const ImRect& bb, CurveEditor& 
             window->DrawList->AddRect(a, b, GetColorU32(ImGuiCol_PlotLinesHovered), 0, 0, 2);
     }
 }
+
 }
